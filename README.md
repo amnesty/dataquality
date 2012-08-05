@@ -1,8 +1,3 @@
-mysql-validdoc-es
-=================
-
-MySQL functions to validate Spanish Id numbers.
-
 What do these functions do?
 ===========================
 
