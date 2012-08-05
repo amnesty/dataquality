@@ -1,10 +1,7 @@
--- --------------------------------------------------------------------------------
--- Routine DDL
--- Note: comments before and after the routine body will not be stored by the server
--- --------------------------------------------------------------------------------
-DELIMITER $$
+delimiter $$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `getDocType_es`(DocNumber varchar(15)) RETURNS varchar(255) CHARSET latin1
+create function getDocType_es(DocNumber varchar(15))
+returns varchar(255)
 begin
 	/* La definición de los tipos de documento la extraje del script publicado en:
 		http://www.emesn.com/autoitforum/viewtopic.php?f=4&t=1704 */
