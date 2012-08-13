@@ -1,7 +1,3 @@
--- --------------------------------------------------------------------------------
--- Routine DDL
--- Note: comments before and after the routine body will not be stored by the server
--- --------------------------------------------------------------------------------
 delimiter $$
 
 create function isValidSpanishDoc(DocNumber varchar(15) returns integer
