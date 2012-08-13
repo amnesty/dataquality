@@ -1,37 +1,139 @@
+-- --------------------------------------------------------------------------------
+-- Routine DDL
+-- Note: comments before and after the routine body will not be stored by the server
+-- --------------------------------------------------------------------------------
 delimiter $$
 
-create function getDocType_es(DocNumber varchar(15))
-returns varchar(255)
+create function isValidSpanishDoc(DocNumber varchar(15) returns integer
 begin
-	/* La definición de los tipos de documento la extraje del script publicado en:
-		http://www.emesn.com/autoitforum/viewtopic.php?f=4&t=1704 */
 
-	declare Type varchar(255);
+        /* Devuelve:
+                1 = NIF ok, 2 = CIF ok, 3 = NIE ok
+                1 = NIF error, -2 = CIF error, -3 = NIE error
+                0 = ??? error */
 
-	set Type = case
-		when left(DocNumber, 1) not regexp '^[[:alpha:]]' then 'NIF'
-		when left(DocNumber, 1) = 'K' then 'NIF especial: Español menor de catorce años o extranjero menor de dieciocho'
-		when left(DocNumber, 1) = 'L' then 'NIF especial: Español mayor de catorce años residiendo en el extranjero y que se traslada por tiempo inferior a seis meses a España'
-		when left(DocNumber, 1) = 'M' then 'NIF especial: Extranjero mayor de dieciocho años no residente en España no obligado a disponer de NIE y que realiza operaciones con trascendencia tributaria'
-		when left(DocNumber, 1) = 'A' then 'CIF: Sociedad Anónima'
-		when left(DocNumber, 1) = 'B' then 'CIF: Sociedad de responsabilidad limitada'
-		when left(DocNumber, 1) = 'C' then 'CIF: Sociedad colectiva'
-		when left(DocNumber, 1) = 'D' then 'CIF: Sociedad comanditaria'
-		when left(DocNumber, 1) = 'E' then 'CIF: Comunidad de bienes y herencias yacentes'
-		when left(DocNumber, 1) = 'F' then 'CIF: Sociedad cooperativa'
-		when left(DocNumber, 1) = 'G' then 'CIF: Sindicato, partido político, asoc. de consumidores y usuarios, federación deportiva o fundación (entidades sin ánimo de lucro o Caja de Ahorros)'
-		when left(DocNumber, 1) = 'H' then 'CIF: Comunidad de propietarios en régimen de propiedad horizontal'
-		when left(DocNumber, 1) = 'J' then 'CIF: Sociedad Civil, con o sin personalidad jurídica'
-		when left(DocNumber, 1) = 'N' then 'CIF: Entidad extranjera'
-		when left(DocNumber, 1) = 'P' then 'CIF: Corporación local'
-		when left(DocNumber, 1) = 'Q' then 'CIF: Organismo público, agencia estatal, organismo autónomo y asimilados, cámara agraria, etc'
-		when left(DocNumber, 1) = 'R' then 'CIF: Congregación o Institución Religiosa'
-		when left(DocNumber, 1) = 'S' then 'CIF: Órgano de la Administración del Estado y Comunidades Autónomas'
-		when left(DocNumber, 1) = 'U' then 'CIF: Unión Temporal de Empresas'
-		when left(DocNumber, 1) = 'V' then 'CIF: Fondo de inversiones o de pensiones, agrupación de interés económico, sociedad agraria de transformación, etc'
-		when left(DocNumber, 1) = 'W' then 'CIF: Establecimiento permanente de entidades no residentes en España'
-		when left(DocNumber, 1) in ('X', 'Y', 'Z') then 'NIE'
-		else '' end;
+        /* Esta función empezó siendo una traducción a Transact SQL de la función publicada en:
+                http://compartecodigo.com/javascript/validar-nif-cif-nie-segun-ley-vigente-31.html */
 
-	return Type;
+    declare IsValid int;
+    declare FixedDocNumber varchar(15);
+    declare Letters varchar(28);
+    declare KeyString varchar(23);
+
+    declare Posicion int;
+    declare LetraDNI varchar(1);
+
+    declare i int;
+    declare Suma int;
+    declare Char1 varchar(5);
+    declare Char2 varchar(5);
+    declare n int;
+
+    declare tmp varchar(5);
+    declare LetraCIF varchar(1);
+
+    set IsValid = 0;
+
+    /* Si es NIF, relleno con ceros a la izquierda */
+    set DocNumber = case when left(DocNumber, 1) not regexp '^[[:alpha:]]' then
+        right(concat('00000000', DocNumber), 9) else DocNumber end;
+
+    set FixedDocNumber = upper(DocNumber);
+    set Letters = '[ABCDEFGHIJKLMNOPQRSTUVWXYZ]';
+    set KeyString = 'TRWAGMYFPDXBNJZSQVHLCKE';
+
+    if (FixedDocNumber &lt;&gt; '') then
+        /* Si no tiene un formato valido, devuelve error */
+        if (FixedDocNumber not regexp '[A-Z][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z0-9]' and
+            FixedDocNumber not regexp 'T[A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]' and
+            FixedDocNumber not regexp '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]') then
+            set IsValid = 0;
+            return IsValid;
+        end if;
+
+        /* Comprobación de NIFs estandar */
+        if (left(FixedDocNumber, 8) regexp ('^[0-9]+$') and right(FixedDocNumber, 1) regexp Letters) then
+            set Posicion = left(FixedDocNumber, 8) % 23;
+            set LetraDNI = right(FixedDocNumber, 1);
+
+            if (substring(KeyString, Posicion + 1, 1) = LetraDNI) then
+                set IsValid = 1;
+            else
+                set IsValid = -1;
+            end if;
+
+            return IsValid;
+        end if;
+
+        /* Algoritmo para comprobacion de codigos tipo CIF */
+        set i = 1;
+
+        set Suma =
+                convert(substring(DocNumber, 3, 1), unsigned) +
+                convert(substring(DocNumber, 5, 1), unsigned) +
+                convert(substring(DocNumber, 7, 1), unsigned);
+
+        while (i &lt; 8) do
+            temp1 = temp1.substring(0,1); */
+            set Char1 = 2 * convert(substring(DocNumber, i + 1, 1), unsigned);
+            set Char1 = substring(Char1, 1, 1);
+
+            set Char2 = 2 * convert(substring(DocNumber, i + 1, 1), unsigned);
+            set Char2 = substring(Char2, 2, 1);
+
+            if (ifnull(Char2, '') = '') then
+                    set Char2 = '0';
+            end if;
+
+            set i = i + 2;
+            set Suma = Suma + convert(Char1, unsigned) + convert(Char2, unsigned);
+        end while;
+
+        set n = 10 - substring(convert(Suma, char(5)), length(convert(Suma, char(5))), 1);
+
+        /* Comprobacion de CIFs */
+        if (left(FixedDocNumber, 1) regexp '[ABCDEFGHJNPQRSUVW]') then
+            set tmp = n;
+
+            if (substring(DocNumber, 9, 1) = char(64 + n) or
+                    convert(substring(DocNumber, 9, 1), unsigned) = convert(right(FixedDocNumber, 1), unsigned)) then
+                    set IsValid = 2;
+            else
+                    set IsValid = -2;
+            end if;
+
+            return IsValid;
+        end if;
+
+        /* Comprobacion de NIEs que comienzan por T */
+        if (left(FixedDocNumber, 1) like '[T]') then
+            set IsValid = 3;
+            return IsValid;
+        end if;
+
+        /* Comprobacion de NIEs que comienzan por X, Y o Z
+                y de NIFs especiales */
+        if (left(FixedDocNumber, 1) like '[KLMXYZ]') then
+            set LetraCIF = right(FixedDocNumber, 1);
+
+            set FixedDocNumber = replace(FixedDocNumber, 'Y', '1');
+            set FixedDocNumber = replace(FixedDocNumber, 'Z', '2');
+            set FixedDocNumber = replace(FixedDocNumber, 'X', '0');
+            set FixedDocNumber = replace(FixedDocNumber, 'K', '0');
+            set FixedDocNumber = replace(FixedDocNumber, 'L', '0');
+            set FixedDocNumber = replace(FixedDocNumber, 'M', '0');
+
+            set Posicion = left(FixedDocNumber, 8) % 23;
+
+            if (substring(KeyString, Posicion + 1, 1) = @letracif) then
+                    set IsValid = 3;
+            else
+                    set IsValid = -3;
+            end if;
+
+            return IsValid;
+        end if;
+    end if;
+
+    return IsValid;
 end
