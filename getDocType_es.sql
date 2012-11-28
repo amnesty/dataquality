@@ -1,37 +1,77 @@
-delimiter $$
+DELIMITER $$
 
-create function getDocType_es(DocNumber varchar(15))
-returns varchar(255)
-begin
-	/* La definición de los tipos de documento la extraje del script publicado en:
-		http://www.emesn.com/autoitforum/viewtopic.php?f=4&t=1704 */
+DROP TABLE IF EXISTS SpanishDocTypeDescriptions $$
 
-	declare Type varchar(255);
+CREATE TABLE SpanishDocTypeDescriptions (
+    Id VARCHAR(1),
+    Description VARCHAR(255)) $$
 
-	set Type = case
-		when left(DocNumber, 1) not regexp '^[[:alpha:]]' then 'NIF'
-		when left(DocNumber, 1) = 'K' then 'NIF especial: Español menor de catorce años o extranjero menor de dieciocho'
-		when left(DocNumber, 1) = 'L' then 'NIF especial: Español mayor de catorce años residiendo en el extranjero y que se traslada por tiempo inferior a seis meses a España'
-		when left(DocNumber, 1) = 'M' then 'NIF especial: Extranjero mayor de dieciocho años no residente en España no obligado a disponer de NIE y que realiza operaciones con trascendencia tributaria'
-		when left(DocNumber, 1) = 'A' then 'CIF: Sociedad Anónima'
-		when left(DocNumber, 1) = 'B' then 'CIF: Sociedad de responsabilidad limitada'
-		when left(DocNumber, 1) = 'C' then 'CIF: Sociedad colectiva'
-		when left(DocNumber, 1) = 'D' then 'CIF: Sociedad comanditaria'
-		when left(DocNumber, 1) = 'E' then 'CIF: Comunidad de bienes y herencias yacentes'
-		when left(DocNumber, 1) = 'F' then 'CIF: Sociedad cooperativa'
-		when left(DocNumber, 1) = 'G' then 'CIF: Sindicato, partido político, asoc. de consumidores y usuarios, federación deportiva o fundación (entidades sin ánimo de lucro o Caja de Ahorros)'
-		when left(DocNumber, 1) = 'H' then 'CIF: Comunidad de propietarios en régimen de propiedad horizontal'
-		when left(DocNumber, 1) = 'J' then 'CIF: Sociedad Civil, con o sin personalidad jurídica'
-		when left(DocNumber, 1) = 'N' then 'CIF: Entidad extranjera'
-		when left(DocNumber, 1) = 'P' then 'CIF: Corporación local'
-		when left(DocNumber, 1) = 'Q' then 'CIF: Organismo público, agencia estatal, organismo autónomo y asimilados, cámara agraria, etc'
-		when left(DocNumber, 1) = 'R' then 'CIF: Congregación o Institución Religiosa'
-		when left(DocNumber, 1) = 'S' then 'CIF: Órgano de la Administración del Estado y Comunidades Autónomas'
-		when left(DocNumber, 1) = 'U' then 'CIF: Unión Temporal de Empresas'
-		when left(DocNumber, 1) = 'V' then 'CIF: Fondo de inversiones o de pensiones, agrupación de interés económico, sociedad agraria de transformación, etc'
-		when left(DocNumber, 1) = 'W' then 'CIF: Establecimiento permanente de entidades no residentes en España'
-		when left(DocNumber, 1) in ('X', 'Y', 'Z') then 'NIE'
-		else '' end;
+INSERT INTO SpanishDocTypeDescriptions(Id, Description) VALUES
+    ('K', 'Español menor de catorce años o extranjero menor de dieciocho'),
+    ('L', 'Español mayor de catorce años residiendo en el extranjero y que se traslada por tiempo '
+        + 'inferior a seis meses a España'),
+    ('M', 'Extranjero mayor de dieciocho años no residente en España no obligado a disponer de NIE '
+        + 'y que realiza operaciones con trascendencia tributaria'),
+    ('A', 'Sociedad Anónima'),
+    ('B', 'Sociedad de responsabilidad limitada'),
+    ('C', 'Sociedad colectiva'),
+    ('D', 'Sociedad comanditaria'),
+    ('E', 'Comunidad de bienes y herencias yacentes'),
+    ('F', 'Sociedad cooperativa'),
+    ('G', 'Sindicato, partido político, asoc. de consumidores y usuarios, federación deportiva o '
+        + 'fundación (entidades sin ánimo de lucro o Caja de Ahorros)'),
+    ('H', 'Comunidad de propietarios en régimen de propiedad horizontal'),
+    ('J', 'Sociedad Civil, con o sin personalidad jurídica'),
+    ('N', 'Entidad extranjera'),
+    ('P', 'Corporación local'),
+    ('Q', 'Organismo público, agencia estatal, organismo autónomo y asimilados, cámara agraria, etc'),
+    ('R', 'Congregación o Institución Religiosa'),
+    ('S', 'Órgano de la Administración del Estado y Comunidades Autónomas'),
+    ('U', 'Unión Temporal de Empresas'),
+    ('V', 'Fondo de inversiones o de pensiones, agrupación de interés económico, sociedad agraria '
+        + 'de transformación, etc'),
+    ('W', 'Establecimiento permanente de entidades no residentes en España') $$
 
-	return Type;
-end
+DROP FUNCTION IF EXISTS getSpanishDocType $$
+
+CREATE FUNCTION getSpanishDocType(DocNumber VARCHAR(15))
+RETURNS VARCHAR(3)
+BEGIN
+    /* Spanish Document Types are described in:
+        http://www.emesn.com/autoitforum/viewtopic.php?f=4&t=1704 */
+
+    DECLARE FirstChar VARCHAR(1);
+    DECLARE DocType VARCHAR(255);
+
+    SET FirstChar = LEFT(DocNumber, 1);
+
+    SET DocType =
+        CASE
+            WHEN FirstChar NOT REGEXP '^[[:alpha:]]' THEN 'NIF'
+            WHEN FirstChar REGEXP '^[KLM]' THEN 'NIF'
+            WHEN FirstChar REGEXP '^[XYZ]' THEN 'NIE'
+            WHEN FirstChar REGEXP '^[ABCDEFGHJNPQRSUVW]' THEN 'CIF'
+        ELSE '' END;
+
+    RETURN DocType;
+END $$
+
+DROP FUNCTION IF EXISTS getSpanishDocTypeDescription $$
+
+CREATE FUNCTION getSpanishDocTypeDescription(DocNumber VARCHAR(15))
+RETURNS VARCHAR(255)
+BEGIN
+    /* Spanish Document Types are described in:
+        http://www.emesn.com/autoitforum/viewtopic.php?f=4&t=1704 */
+
+    DECLARE FirstChar VARCHAR(1);
+    DECLARE DocTypeDescription VARCHAR(255);
+
+    SET FirstChar = LEFT(DocNumber, 1);
+
+    SET DocTypeDescription =
+        (SELECT Description FROM SpanishDocTypeDescriptions
+                WHERE Id = FirstChar LIMIT 1);
+
+    RETURN IFNULL(DocTypeDescription, '');
+END $$
