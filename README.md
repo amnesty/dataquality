@@ -3,42 +3,49 @@ What do these functions do?
 
 These functions perform standard validations over id Spanish numbers.
 
-What do these functions receive?
---------------------------------
+Parameters
+----------
 
 Easy. Only the number to validate.
 
-What will these functions return?
----------------------------------
+Return values
+-------------
 
 In the case of isValidDocNumber_es, I kept the convention used by the original
 JavaScript version:
 
 * returns a positive value if the number is valid
-    (1 for a valid NIF, 2 for a valid CIF and 3 for a valid NIE),
+    1: specified document number is a valid NIF
+    2: specified document number is a valid CIF
+    3: specified document number is a valid NIE
 * returns a negative value if the number is not valid
-    (-1 for a invalid NIF, -2 for a invalid CIF and -3 for a invalid NIE),
-* returns zero in other cases (empty string, etc).
+    -1: specified document number is a invalid NIF
+    -2: specified document number is a invalid CIF
+    -3: specified document number is a invalid NIE
+* returns zero in other cases (empty string, unknown document types, etc).
 
 Examples:
 
-> select IsValidDocNumber_es('11111111A') as IsValid;
->    /* Will return -1 */
->
-> select IsValidDocNumber_es('Q2816003D') as IsValid;
->    /* Will return 2 */
+> SELECT IsValidDocNumber_es('11111111A') AS IsValid;
 
-In the case of getDocType_es, it returns a (Spanish) description about the kind
-of organisation.
+Returns -1 because the specified document number is not valid.
+
+> SELECT IsValidDocNumber_es('Q2816003D') AS IsValid;
+
+Returns 2 because the specified document number is a valid CIF.
+
+The function getSpanishDocType, returns a 3 characters string corresponding
+to the document type (in Spanish). Possible values are: NIF, NIE or CIF.
 
 Examples:
 
-> select getDocType_es('11111111A') as DocType;
->    /* Will return 'NIF' */
->
-> select getDocType_es('Q2816003D') as DocType;
->    /* Will return 'CIF: Organismo público, agencia estatal,
->        organismo autónomo y asimilados, cámara agraria, etc' */
+> SELECT getSpanishDocType('11111111A') AS Type;
+
+Returns 'NIF', even if the specified document number is not correct.
+
+> SELECT getSpanishDocTypeDescription('A83217281') AS Description;
+
+Returns 'Sociedad Anónima'.
 
 Why would we validate in MySQL?
 -------------------------------
@@ -53,8 +60,12 @@ Example:
 If you have a organisations table with a CIF field, these functions will allow you to
 list the different kind of organisations you've got:
 
-> select CIF, isValidDocNumber_es(CIF) as IsValid, getDocType(CIF) as DocType
->    from organisations
+> SELECT
+>     CIF,
+>     isValidDocNumber_es(CIF) AS IsValid,
+>     getSpanishDocType(CIF) AS Type,
+>     getSpanishDocTypeDescription(CIF) AS Description
+> FROM organisations;
 
 Sources
 -------
