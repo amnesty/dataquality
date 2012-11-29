@@ -1,5 +1,26 @@
-What do these functions do?
-===========================
+Capitalize first character (for names and surnames)
+===================================================
+
+Allows you to capitalize the first character in names and surnames.
+
+Parameters
+----------
+
+The name -or surname- in a string format (varchar of a maximum of 65535).
+
+Return values
+-------------
+
+The name -or surname- corrected.
+
+Examples:
+
+> SELECT capitalizeNoun('fco. juan hernández-gómez gutiérrez-lópez');
+
+Returns Fco. Juan Hernández-Gómez Gutiérrez-López.
+
+Validation of Spanish Id's
+==========================
 
 These functions perform standard validations over id Spanish numbers.
 
@@ -26,11 +47,11 @@ JavaScript version:
 
 Examples:
 
-> SELECT IsValidDocNumber_es('11111111A') AS IsValid;
+> SELECT isValidDocNumber_es('11111111A') AS IsValid;
 
 Returns -1 because the specified document number is not valid.
 
-> SELECT IsValidDocNumber_es('Q2816003D') AS IsValid;
+> SELECT isValidDocNumber_es('Q2816003D') AS IsValid;
 
 Returns 2 because the specified document number is a valid CIF.
 
