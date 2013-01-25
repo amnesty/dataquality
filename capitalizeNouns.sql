@@ -7,7 +7,7 @@ RETURNS varchar(65535) CHARSET latin1
 BEGIN
     /*	Example:
         This query;
-            SELECT initcap('fco. juan hernández-gómez gutiérrez-lópez');
+            SELECT capitalizeNoun('fco. juan hernández-gómez gutiérrez-lópez');
         Returns:
             Fco. Juan Hernández-Gómez Gutiérrez-López
     */
