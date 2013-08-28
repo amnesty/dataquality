@@ -1,12 +1,15 @@
 DELIMITER $$
 
-DROP FUNCTION IF EXISTS capitalizeNoun $$
+DROP FUNCTION IF EXISTS capitalize $$
 
-CREATE FUNCTION capitalizeNoun(phrase varchar(65535))
-RETURNS varchar(65535) CHARSET latin1
+CREATE FUNCTION capitalize(phrase VARCHAR(65535))
+    RETURNS VARCHAR(65535)
+    COMMENT 'Capitalizes propertly names and surnames'
 BEGIN
-    /*	Example:
-        This query;
+    /*
+	This function corrects capitalization for names and surnames.
+    
+	Usage:
             SELECT capitalizeNoun('fco. juan hernández-gómez gutiérrez-lópez');
         Returns:
             Fco. Juan Hernández-Gómez Gutiérrez-López
