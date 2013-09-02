@@ -3,7 +3,7 @@ Data Quality
 
 Data quality functions allows you to perform certain validations in your data, such as verify control digits in bank accounts, correct the capitalization of names and surnames, etc.
 
-What kind of validations do these functions perform?
+What kind of validations can I find?
 ----------------------------------------------------
 
 The functions contained here are intended to be used to check the data of a CRM database. So you'll find functions to validate document numbers (Spanish NIFs, NIEs and CIFs), control digits of bank account numbers, etc.
