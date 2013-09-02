@@ -14,6 +14,7 @@ BEGIN
 
         This function requires:
                 - replaceLetterWithDigits
+                - replaceCharactersNotInPattern
 
         Usage:
                 SELECT getGlobalIdentifier( 'G28667152', 'ES', '' )
