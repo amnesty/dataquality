@@ -1,7 +1,9 @@
 MySQL functions
 ===============
 
-These functions are part of a Data Quality project. For more information about the project, see: https://github.com/amnesty/dataquality
+These functions are part of a Data Quality project.
+
+For more information about the project, see: https://github.com/amnesty/dataquality
 
 Why may these functions be useful?
 ----------------------------------
@@ -18,8 +20,8 @@ If you have a organisations table with a Spanish corporate tax identification nu
 ```
 SELECT
     CIF,
-    isValidSpanishDoc(CIF) AS IsValid,
-    getSpanishDocTypeDescription(CIF) AS Description
+    isValidCIF(CIF) AS IsValid,
+    getIdType(CIF) AS Description
 FROM organisations;
 ```
 
