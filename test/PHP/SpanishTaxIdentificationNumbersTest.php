@@ -79,9 +79,6 @@
             $this->assertFalse( isValidIdNumber( 'F43298257' ) );
             $this->assertFalse( isValidIdNumber( '0A0A0A0A' ) );
             $this->assertFalse( isValidIdNumber( '' ) );
-
-
-
         }
 
     }
