@@ -12,13 +12,13 @@
     *       - isValidNIF and isValidNIFFormat
     *
     *   This function returns:
-    *       1: If specified identification number is correct
-    *       0: Otherwise
+    *       TRUE: If specified identification number is correct
+    *       FALSE: Otherwise
     *
     *   Usage:
-    *       SELECT isValidIdNumber( 'G28667152' );
+    *       echo isValidIdNumber( 'G28667152' );
     *   Returns:
-    *       1
+    *       TRUE
     */
     function isValidIdNumber( $docNumber ) {
         $fixedDocNumber = strtoupper( $docNumber );
@@ -52,16 +52,16 @@
     *       - getNIFControlDigit
     *
     *   This function returns:
-    *       1: If specified identification number is correct
-    *       0: Otherwise
+    *       TRUE: If specified identification number is correct
+    *       FALSE: Otherwise
     *
     *   Algorithm works as described in:
     *       http://www.interior.gob.es/dni-8/calculo-del-digito-de-control-del-nif-nie-2217
     *
     *   Usage:
-    *       SELECT isValidNIF( '33576428Q' );
+    *       echo isValidNIF( '33576428Q' );
     *   Returns:
-    *       1
+    *       TRUE
     */
     function isValidNIF( $docNumber ) {
         $isValid = FALSE;
@@ -110,7 +110,7 @@
     *       http://www.interior.gob.es/dni-8/calculo-del-digito-de-control-del-nif-nie-2217
     *
     *   Usage:
-    *       SELECT isValidNIE( 'X6089822C' )
+    *       echo isValidNIE( 'X6089822C' )
     *   Returns:
     *       TRUE
     */
@@ -158,8 +158,8 @@
     *       - getCIFControlDigit
     *
     *   This function returns:
-    *       1: If specified identification number is correct
-    *       0: Otherwise
+    *       TRUE: If specified identification number is correct
+    *       FALSE: Otherwise
     *
     * CIF numbers structure is defined at:
     *   BOE number 49. February 26th, 2008 (article 2)
@@ -202,13 +202,13 @@
     *       - isValidNIF
     *
     *   This function returns:
-    *       1: If specified string respects NIF format
-    *       0: Otherwise
+    *       TRUE: If specified string respects NIF format
+    *       FALSE: Otherwise
     *
     *   Usage:
     *       echo isValidNIFFormat( '33576428Q' )
     *   Returns:
-    *       1
+    *       TRUE
     */
     function isValidNIFFormat( $docNumber ) {
         return respectsDocPattern(
@@ -231,8 +231,8 @@
     *       - respectsDocPattern
     *
     *   This function returns:
-    *       1: If specified string respects NIE format
-    *       0: Otherwise
+    *       TRUE: If specified string respects NIE format
+    *       FALSE: Otherwise
     *
     *   Usage:
     *       echo isValidNIEFormat( 'X6089822C' )
@@ -417,8 +417,8 @@
     *       - isValidCIFFormat
     *
     *   This function returns:
-    *       1: If specified string respects the pattern
-    *       0: Otherwise
+    *       TRUE: If specified string respects the pattern
+    *       FALSE: Otherwise
     *
     *   Usage:
     *       echo respectsDocPattern(
