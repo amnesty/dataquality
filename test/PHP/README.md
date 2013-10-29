@@ -15,6 +15,7 @@ To run these tests, simply navigate to the folder where you've downloaded the so
 open a command line and run:
 
 > cd test/PHP
+> 
 > phpunit SpanishTaxIdentificationNumbersTest.php
 
 If everything works as it should, you're output will be something like:
