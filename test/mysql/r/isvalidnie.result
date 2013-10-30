@@ -1,0 +1,12 @@
+SELECT isValidNIE( 'X6089822C' ) AS valid;
+valid
+1
+SELECT isValidNIE( 'X6089822D' ) AS valid;
+valid
+0
+SELECT isValidNIE( '0A0A0A0A' ) AS valid;
+valid
+0
+SELECT isValidNIE( '' ) AS valid;
+valid
+0

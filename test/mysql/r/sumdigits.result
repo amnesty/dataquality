@@ -1,0 +1,6 @@
+SELECT sumDigits( '123' ) AS mySum;
+mySum
+6
+SELECT sumDigits( 12345 ) AS mySum;
+mySum
+15

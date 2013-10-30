@@ -1,0 +1,4 @@
+SELECT isValidNIFFormat( '11111111H' ) AS valid;
+SELECT isValidNIFFormat( '11111111A' ) AS valid;
+SELECT isValidNIFFormat( '0A0A0A0A' ) AS valid;
+SELECT isValidNIFFormat( '' ) AS valid;

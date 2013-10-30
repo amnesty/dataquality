@@ -1,0 +1,24 @@
+SELECT isValidIdNumber( '11111111H' ) AS valid;
+valid
+1
+SELECT isValidIdNumber( '11111111A' ) AS valid;
+valid
+0
+SELECT isValidIdNumber( 'X6089822C' ) AS valid;
+valid
+1
+SELECT isValidIdNumber( 'X6089822D' ) AS valid;
+valid
+0
+SELECT isValidIdNumber( 'F43298256' ) AS valid;
+valid
+1
+SELECT isValidIdNumber( 'F43298257' ) AS valid;
+valid
+0
+SELECT isValidIdNumber( '0A0A0A0A' ) AS valid;
+valid
+0
+SELECT isValidIdNumber( '' ) AS valid;
+valid
+0

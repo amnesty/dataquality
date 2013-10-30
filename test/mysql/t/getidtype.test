@@ -1,0 +1,3 @@
+SELECT getIdType( 'A49640873' ) AS type;
+SELECT getIdType( '' ) AS type;
+SELECT getIdType( '0A0A0A0A0A' ) AS type;

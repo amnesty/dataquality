@@ -1,0 +1,3 @@
+SELECT isValidCIFFormat( 'H24930836' ) AS valid;
+SELECT isValidCIFFormat( '0A0A0A0A' ) AS valid;
+SELECT isValidCIFFormat( '' ) AS valid;

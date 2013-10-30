@@ -1,0 +1,9 @@
+SELECT getIdType( 'A49640873' ) AS type;
+type
+Sociedad Anónima
+SELECT getIdType( '' ) AS type;
+type
+
+SELECT getIdType( '0A0A0A0A0A' ) AS type;
+type
+

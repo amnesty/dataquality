@@ -1,0 +1,2 @@
+SELECT sumDigits( '123' ) AS mySum;
+SELECT sumDigits( 12345 ) AS mySum;

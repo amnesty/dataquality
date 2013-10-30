@@ -1,0 +1,9 @@
+SELECT isValidNIF( '06089822C' ) AS valid;
+valid
+1
+SELECT isValidNIF( '11111111H' ) AS valid;
+valid
+1
+SELECT isValidNIF( '11111111A' ) AS valid;
+valid
+0

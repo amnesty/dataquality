@@ -1,0 +1,9 @@
+SELECT getNIFControlDigit( '335764280' ) AS cd;
+cd
+Q
+SELECT getNIFControlDigit( '060898220' ) AS cd;
+cd
+C
+SELECT getNIFControlDigit( '0A0A0A0A' ) AS cd;
+cd
+

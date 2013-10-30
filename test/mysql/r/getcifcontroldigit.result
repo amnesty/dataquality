@@ -1,0 +1,6 @@
+SELECT getCIFControlDigit( 'H24930830' ) AS cd;
+cd
+6
+SELECT getCIFControlDigit( 'Q54626360' ) AS cd;
+cd
+A

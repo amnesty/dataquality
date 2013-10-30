@@ -1,0 +1,9 @@
+SELECT isValidNIEFormat( 'X6089822C' ) AS valid;
+valid
+1
+SELECT isValidNIEFormat( '0A0A0A0A' ) AS valid;
+valid
+0
+SELECT isValidNIEFormat( '' ) AS valid;
+valid
+0

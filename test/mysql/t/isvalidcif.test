@@ -1,0 +1,4 @@
+SELECT isValidCIF( 'F43298256' ) AS valid;
+SELECT isValidCIF( 'F43298257' ) AS valid;
+SELECT isValidCIF( '0A0A0A0A' ) AS valid;
+SELECT isValidCIF( '' ) AS valid;

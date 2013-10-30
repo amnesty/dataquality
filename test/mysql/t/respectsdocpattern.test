@@ -1,0 +1,2 @@
+SELECT respectsDocPattern( '33576428Q', '[KLM0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]' ) AS respects;
+SELECT respectsDocPattern( 'A0A0A0A0A', '[KLM0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]' ) AS respects;
