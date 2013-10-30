@@ -258,7 +258,7 @@ BEGIN
         
     RETURN respectsDocPattern(
         docNumber,
-        '[KLM0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]' );
+        '[KLM0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z0-9]' );
 END $$
 
 DROP FUNCTION IF EXISTS isValidNIEFormat $$
@@ -333,7 +333,7 @@ BEGIN
     RETURN
         respectsDocPattern(
             docNumber,
-            '[PQSNWR][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]' )
+            '[PQSNWR][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z0-9]' )
     OR
         respectsDocPattern(
             docNumber,
@@ -584,9 +584,9 @@ BEGIN
 
         This function requires:
             - identificationType (table)
-            - isValidSpanishCIFFormat
-            - isValidSpanishNIEFormat
-            - isValidSpanishNIFFormat
+            - isValidCIFFormat
+            - isValidNIEFormat
+            - isValidNIFFormat
 
         Usage:
             SELECT getIdType( 'H67905364' )
@@ -600,9 +600,9 @@ BEGIN
     SET docTypeDescription = '';
     SET firstChar = LEFT(docNumber, 1);
 
-    IF ( isValidSpanishNIFFormat( docNumber ) = 1 OR
-        isValidSpanishNIEFormat( docNumber ) = 1 OR
-        isValidSpanishCIFFormat( docNumber ) = 1 ) THEN
+    IF ( isValidNIFFormat( docNumber ) = 1 OR
+        isValidNIEFormat( docNumber ) = 1 OR
+        isValidCIFFormat( docNumber ) = 1 ) THEN
 
         SET docTypeDescription =
             ( SELECT description FROM identificationType
