@@ -1,0 +1,9 @@
+SELECT isValidAccountNumber( '1234', '1234', '16', '1234567890' ) AS valid;
+valid
+1
+SELECT isValidAccountNumber( '1234', '1234', '00', '1234567890' ) AS valid;
+valid
+0
+SELECT isValidAccountNumber( 'AAAA', 'AAAA', 'AA', 'AAAAAAAAAA' ) AS valid;
+valid
+0
