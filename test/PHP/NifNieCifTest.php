@@ -1,7 +1,7 @@
 <?php
-    require_once( '../../src/PHP/spanish-tax-identification-numbers.php' );
+    require_once( '../../src/php/nif-nie-cif.php' );
 
-    class SpanishTaxIdentificationNumbersTest extends PHPUnit_Framework_TestCase {
+    class NifNieCifTest extends PHPUnit_Framework_TestCase {
         public function testGetIdType() {
             $this->assertEquals( 'Sociedad Anónima', getIdType( 'A49640873' ) );
             $this->assertEmpty( getIdType( '' ) );
