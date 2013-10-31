@@ -8,9 +8,9 @@ These tests have been written using the MySQL Test Framework.
 If you want to run them, you'll need to install it first.
 You'll find the installation instructions at the official manual: [The MySQL Test Framework, Version 2.0](http://downloads.mysql.com/docs/mysqltest-2.0-en.pdf).
 
-In my case (I'm running a MariaDB Server over a Debian Operating System), I've just done:
+In my case (I'm running a MariaDB Server over a Debian Operating System), I've just added the MariaDB servers to my repositories and then executed:
 
-> apt-get install mariadb-server
+> apt-get install mariadb-test
 
 Running the tests
 -----------------
