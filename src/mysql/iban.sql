@@ -1,3 +1,141 @@
+DROP FUNCTION IF EXISTS isValidIBAN $$
+
+CREATE FUNCTION isValidIBAN( accNumber VARCHAR(64) )
+    RETURNS INT
+    DETERMINISTIC
+    READS SQL DATA
+    COMMENT 'Verifies the structure of an IBAN and its control digits'
+BEGIN
+    /*
+        This function expects the entire account number in the electronic
+        format (without spaces), as described in the ISO 13616-Compliant
+        IBAN Formats document.
+
+        This function returns:
+            1: If the given account number is valid.
+            0: Otherwise.
+
+        Usage:
+            SELECT isValidIBAN( 'GB82WEST12345698765432' );
+        Returns:
+            1
+    */
+
+    DECLARE isValid INT;
+    DECLARE countryCode VARCHAR(2);
+    DECLARE writenDigits VARCHAR(2);
+
+    SET isValid = 0;
+    SET countryCode = LEFT( accNumber, 2 );
+    SET writenDigits = SUBSTRING( accNumber, 3, 2 );
+
+    IF ( isSepaCountry( countryCode ) ) THEN
+        IF ( LENGTH( accNumber ) = getAccountLength( countryCode ) ) THEN
+            IF ( writenDigits = getIBANControlDigits( accNumber ) ) THEN
+                SET isValid = 1;
+            END IF;
+        END IF;
+    END IF;
+
+    RETURN isValid;
+END $$
+
+DROP FUNCTION IF EXISTS isSepaCountry$$
+
+CREATE FUNCTION isSepaCountry( countryCode VARCHAR(2) )
+    RETURNS INT
+    DETERMINISTIC
+    READS SQL DATA
+    COMMENT 'Verifies if a given string corresponds with a SEPA Country Code'
+BEGIN
+    /*
+        This function expects a country code as parameter. The code must follow
+        the ISO format of 2 characters (as in ES for Spain).
+
+        This function returns:
+            - 1: If countryCode is a valid Sepa Country Code.
+            - 0: Otherwise.
+
+        Usage:
+            SELECT isSepaCountry( 'ES' );
+        Returns:
+            1
+    */
+
+    DECLARE isSepa INT;
+
+    SET isSepa = 0;
+
+    IF ( getAccountLength( countryCode ) <> 0 ) THEN
+        SET isSepa = 1;
+    END IF;
+
+    RETURN isSepa;
+END $$
+
+DROP FUNCTION IF EXISTS getAccountLength $$
+
+CREATE FUNCTION getAccountLength( countryCode VARCHAR(2) )
+    RETURNS INT
+    DETERMINISTIC
+    READS SQL DATA
+    COMMENT 'Returns the expected length for accounts of a particular SEPA country'
+BEGIN
+    /*
+        This function expects a country code as parameter. The code must follow
+        the ISO format of 2 characters (as in ES for Spain).
+
+        This function returns:
+            - The expected account length for the given country code.
+            - 0: If countryCode is not a country that belongs to the SEPA area.
+
+        Usage:
+            SELECT getAccountLength( 'GB' );
+        Returns:
+            22
+    */
+
+    DECLARE accountLength INT;
+
+    SET accountLength = 0;
+
+    CREATE TEMPORARY TABLE accountLengthPerCountry (
+        countryCode VARCHAR(2),
+        accountLength INT,
+        PRIMARY KEY( countryCode )
+    );
+
+    /* Information Source: IBAN Registry about all ISO 13616-compliant
+        national IBAN formats (Release 45 – April 2013).
+        http://www.swift.com/dsp/resources/documents/IBAN_Registry.pdf */
+
+    INSERT INTO accountLengthPerCountry (countryCode, accountLength) VALUES
+        ('AL', 28), ('AD', 24), ('AT', 20), ('AZ', 28), ('BH', 22),
+        ('BE', 16), ('BA', 20), ('BR', 29), ('BG', 22), ('CR', 21),
+        ('HR', 21), ('CY', 28), ('CZ', 24), ('DK', 18), ('DO', 28),
+        ('EE', 20), ('FO', 18), ('FI', 18), ('FR', 27), ('GE', 22),
+        ('DE', 22), ('GI', 23), ('GR', 27), ('GL', 18), ('GT', 28),
+        ('HU', 28), ('IS', 26), ('IE', 22), ('IL', 23), ('IT', 27),
+        ('KZ', 20), ('KW', 30), ('LV', 21), ('LB', 28), ('LI', 21),
+        ('LT', 20), ('LU', 20), ('MK', 19), ('MT', 31), ('MR', 27),
+        ('MU', 30), ('MC', 27), ('MD', 24), ('ME', 22), ('NL', 18),
+        ('NO', 15), ('PK', 24), ('PS', 29), ('PL', 28), ('PT', 25),
+        ('RO', 24), ('SM', 27), ('SA', 24), ('RS', 22), ('SK', 24),
+        ('SI', 19), ('ES', 24), ('SE', 24), ('CH', 21), ('TN', 24),
+        ('TR', 26), ('AE', 23), ('GB', 22), ('VG', 24), ('AO', 25),
+        ('BJ', 28), ('BF', 27), ('BI', 16), ('CM', 27), ('CV', 25),
+        ('IR', 26), ('CI', 28), ('MG', 27), ('ML', 28), ('MZ', 25),
+        ('SN', 28);
+
+    SET accountLength =
+        IFNULL( ( SELECT lc.accountLength FROM accountLengthPerCountry AS lc
+                WHERE lc.countryCode = countryCode LIMIT 1), 0 );
+
+    DROP TEMPORARY TABLE accountLengthPerCountry;
+
+    RETURN accountLength;
+END $$
+
 DROP FUNCTION IF EXISTS getIBANControlDigits $$
 
 CREATE FUNCTION getIBANControlDigits( accNumber VARCHAR(64) )
@@ -15,12 +153,12 @@ BEGIN
 
         This function requires:
                 - replaceLetterWithDigits
-                - accountLegthPerCountry (table)
+                - getAccountLength
 
         Usage:
-                SELECT getIBANControlDigits( 'GB00WEST12345698765432' )
+            SELECT getIBANControlDigits( 'GB00WEST12345698765432' );
         Returns:
-                82
+            82
     */
 
     DECLARE countryCode VARCHAR(2);
@@ -30,66 +168,35 @@ BEGIN
     DECLARE accMod97 INT;
     DECLARE digits VARCHAR(2);
 
-    CREATE TEMPORARY TABLE accountLegthPerCountry (
-        countryCode VARCHAR(2),
-        accountLength INT,
-        PRIMARY KEY( countryCode )
-    );
-
-    /* Information Source: IBAN Registry about all ISO 13616-compliant
-        national IBAN formats (Release 45 – April 2013).
-        http://www.swift.com/dsp/resources/documents/IBAN_Registry.pdf */
-
-    INSERT INTO accountLegthPerCountry (countryCode, accountLength) VALUES
-        ('AL', '28'), ('AD', '24'), ('AT', '20'), ('AZ', '28'), ('BH', '22'),
-        ('BE', '16'), ('BA', '20'), ('BR', '29'), ('BG', '22'), ('CR', '21'),
-        ('HR', '21'), ('CY', '28'), ('CZ', '24'), ('DK', '18'), ('DO', '28'),
-        ('EE', '20'), ('FO', '18'), ('FI', '18'), ('FR', '27'), ('GE', '22'),
-        ('DE', '22'), ('GI', '23'), ('GR', '27'), ('GL', '18'), ('GT', '28'),
-        ('HU', '28'), ('IS', '26'), ('IE', '22'), ('IL', '23'), ('IT', '27'),
-        ('KZ', '20'), ('KW', '30'), ('LV', '21'), ('LB', '28'), ('LI', '21'),
-        ('LT', '20'), ('LU', '20'), ('MK', '19'), ('MT', '31'), ('MR', '27'),
-        ('MU', '30'), ('MC', '27'), ('MD', '24'), ('ME', '22'), ('NL', '18'),
-        ('NO', '15'), ('PK', '24'), ('PS', '29'), ('PL', '28'), ('PT', '25'),
-        ('RO', '24'), ('SM', '27'), ('SA', '24'), ('RS', '22'), ('SK', '24'),
-        ('SI', '19'), ('ES', '24'), ('SE', '24'), ('CH', '21'), ('TN', '24'),
-        ('TR', '26'), ('AE', '23'), ('GB', '22'), ('VG', '24'), ('AO', '25'),
-        ('BJ', '28'), ('BF', '27'), ('BI', '16'), ('CM', '27'), ('CV', '25'),
-        ('IR', '26'), ('CI', '28'), ('MG', '27'), ('ML', '28'), ('MZ', '25'),
-        ('SN', '28');
+    SET digits = '';
 
     SET countryCode = LEFT( accNumber, 2 );
+    SET accountLength = getAccountLength( countryCode );
 
-    SET accountLength =
-        ( SELECT lc.accountLength FROM accountLegthPerCountry AS lc
-                WHERE lc.countryCode = countryCode LIMIT 1);
+    IF ( isSepaCountry( countryCode ) ) THEN
+        IF ( LENGTH( accNumber ) = accountLength ) THEN
+            /* Replace the two check digits by 00 (e.g., GB00 for the UK) and
+                Move the four initial characters to the end of the string. */
+            SET accRearranged =
+                CONCAT( RIGHT( accNumber, LENGTH( accNumber ) - 4 ), LEFT( accNumber, 2 ), '00' );
 
-    IF ( LENGTH( accNumber ) = accountLength ) THEN
-        /* Replace the two check digits by 00 (e.g., GB00 for the UK) and
-            Move the four initial characters to the end of the string. */
-        SET accRearranged =
-            CONCAT( RIGHT( accNumber, LENGTH( accNumber ) - 4 ), LEFT( accNumber, 2 ), '00' );
+            /* Replace the letters in the string with digits, expanding the string as necessary,
+                such that A or a = 10, B or b = 11, and Z or z = 35.
+                Each alphabetic character is therefore replaced by 2 digits. */
+            SET accWithoutLetters = replaceLetterWithDigits( accRearranged );
 
-        /* Replace the letters in the string with digits, expanding the string as necessary,
-            such that A or a = 10, B or b = 11, and Z or z = 35.
-            Each alphabetic character is therefore replaced by 2 digits. */
-        SET accWithoutLetters = replaceLetterWithDigits( accRearranged );
+            /* Convert the string to an integer (i.e., ignore leading zeroes) and
+                Calculate mod-97 of the new number, which results in the remainder. */
+            SET accMod97 =
+                CAST( accWithoutLetters AS DECIMAL(64) ) MOD 97;
 
-        /* Convert the string to an integer (i.e., ignore leading zeroes) and
-            Calculate mod-97 of the new number, which results in the remainder. */
-        SET accMod97 =
-            CAST( accWithoutLetters AS DECIMAL(64) ) MOD 97;
+            /* Subtract the remainder from 98, and use the result for the two check digits. */
+            SET digits = 98 - accMod97;
 
-        /* Subtract the remainder from 98, and use the result for the two check digits. */
-        SET digits = 98 - accMod97;
-
-        /* If the result is a single digit number, pad it with a leading 0 to make a two-digit number. */
-        SET digits = RIGHT( CONCAT( '00', digits ), 2);
-    ELSE
-        SET digits = '';
+            /* If the result is a single digit number, pad it with a leading 0 to make a two-digit number. */
+            SET digits = RIGHT( CONCAT( '00', digits ), 2);
+        END IF;
     END IF;
-
-    DROP TEMPORARY TABLE accountLegthPerCountry;
 
     RETURN digits;
 END $$
@@ -113,9 +220,9 @@ BEGIN
                 - replaceCharactersNotInPattern
 
         Usage:
-                SELECT getGlobalIdentifier( 'G28667152', 'ES', '' )
+            SELECT getGlobalIdentifier( 'G28667152', 'ES', '' )
         Returns:
-                ES03000G28667152
+            ES03000G28667152
     */
 
     DECLARE withCountry VARCHAR(64);

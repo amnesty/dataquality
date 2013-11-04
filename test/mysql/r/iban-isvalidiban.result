@@ -1,0 +1,9 @@
+SELECT isValidIBAN( 'GB82WEST12345698765432' ) AS valid;
+valid
+1
+SELECT isValidIBAN( 'GB00WEST12345698765432' ) AS valid;
+valid
+0
+SELECT isValidIBAN( '' ) AS valid;
+valid
+0

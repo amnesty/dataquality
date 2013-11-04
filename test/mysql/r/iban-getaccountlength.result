@@ -1,0 +1,9 @@
+SELECT getAccountLength( 'GB' ) AS accLen;
+accLen
+22
+SELECT getAccountLength( 'US' ) AS accLen;
+accLen
+0
+SELECT getAccountLength( '' ) AS accLen;
+accLen
+0

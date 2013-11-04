@@ -1,0 +1,3 @@
+SELECT isSepaCountry( 'ES' ) AS isSepa;
+SELECT isSepaCountry( 'US' ) AS isSepa;
+SELECT isSepaCountry( '' ) AS isSepa;
