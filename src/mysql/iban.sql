@@ -94,7 +94,7 @@ BEGIN
     DECLARE withoutLetters VARCHAR(64);
     DECLARE mod97 INT;
     DECLARE digits VARCHAR(2);
-    DECLARE globalId VARCHAR(64)
+    DECLARE globalId VARCHAR(64);
 
     /* Concatenate localId plus country code and two zeros (00) */
     SET withCountry = CONCAT( localId, countryCode, '00' );
