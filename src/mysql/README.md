@@ -33,9 +33,6 @@ Could generate as output, for instance:
     <th>CIF</th><th>IsValid</th><th>Description</th>
   </tr>
   <tr>
-    <td>X9960779P</td><td>1</td><td>Extranjero residente en España e identificado por la Policía con un NIE</td>
-  </tr>
-  <tr>
     <td>J33374570</td><td>1</td><td>Sociedad Civil, con o sin personalidad jurídica</td>
   </tr>
   <tr>
@@ -46,6 +43,9 @@ Could generate as output, for instance:
   </tr>
   <tr>
     <td>47132737X</td><td>0</td><td>Español con documento nacional de identidad</td>
+  </tr>
+  <tr>
+    <td>X9960779P</td><td>0</td><td>Extranjero residente en España e identificado por la Policía con un NIE</td>
   </tr>
   <tr>
     <td>ABCDEFGHI</td><td>0</td><td></td>
