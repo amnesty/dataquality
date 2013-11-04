@@ -4,24 +4,69 @@
     *   format (without spaces), as described in the ISO 13616-Compliant
     *   IBAN Formats document.
     *
-    *   You can replace control digits with zeros when calling the function.
-    *
-    *   This function requires:
-    *           - replaceLetterWithDigits
-    *           - accountLegthPerCountry (table)
+    *   This function returns:
+    *       TRUE: If the given account number is valid.
+    *       FALSE: Otherwise.
     *
     *   Usage:
-    *           echo getIBANControlDigits( 'GB00WEST12345698765432' );
+    *       SELECT isValidIBAN( 'GB82WEST12345698765432' );
     *   Returns:
-    *           82
+    *       TRUE
     */
-    function getIBANControlDigits( $accNumber ) {
-        $countryCode = "";
+    function isValidIBAN( $accNumber ) {
+        $isValid = FALSE;
+        $countryCode = substr( $accNumber, 0, 2 );
+        $writenDigits = substr( $accNumber, 2, 2 );
+
+        if ( isSepaCountry( $countryCode ) ) {
+            if ( strlen( $accNumber ) == getAccountLength( $countryCode ) ) {
+                if ( $writenDigits == getIBANControlDigits( $accNumber ) ) {
+                    $isValid = TRUE;
+                }
+            }
+        }
+
+        return $isValid;
+    }
+
+   /*
+    *   This function expects a country code as parameter. The code must follow
+    *   the ISO format of 2 characters (as in ES for Spain).
+    *
+    *   This function returns:
+    *       - TRUE: If countryCode is a valid Sepa Country Code.
+    *       - FALSE: Otherwise.
+    *
+    *   Usage:
+    *       SELECT isSepaCountry( 'ES' );
+    *   Returns:
+    *       TRUE
+    */
+    function isSepaCountry( $countryCode ) {
+        $isSepa = FALSE;
+
+        if ( getAccountLength( $countryCode ) <> 0 ) {
+            $isSepa = TRUE;
+        }
+
+        return $isSepa;
+    }
+
+   /*
+    *   This function expects a country code as parameter. The code must follow
+    *   the ISO format of 2 characters (as in ES for Spain).
+    *
+    *   This function returns:
+    *       - The expected account length for the given country code.
+    *       - 0: If countryCode is not a country that belongs to the SEPA area.
+    *
+    *   Usage:
+    *       echo getAccountLength( 'GB' );
+    *   Returns:
+    *       22
+    */
+    function getAccountLength( $countryCode ) {
         $accountLength = 0;
-        $accRearranged = "";
-        $accWithoutLetters = "";
-        $accMod97 = 0;
-        $digits = "";
 
         /* Information Source: IBAN Registry about all ISO 13616-compliant
             national IBAN formats (Release 45 – April 2013).
@@ -45,11 +90,43 @@
             'IR' => 26, 'CI' => 28, 'MG' => 27, 'ML' => 28, 'MZ' => 25,
             'SN' => 28 );
 
+        if( $countryCode ) {
+            if( array_key_exists( $countryCode, $accountLengthPerCountry ) ) {
+                $accountLength = $accountLengthPerCountry[ $countryCode ];
+            }
+        }
+
+        return $accountLength;
+    }
+
+   /*
+    *   This function expects the entire account number in the electronic
+    *   format (without spaces), as described in the ISO 13616-Compliant
+    *   IBAN Formats document.
+    *
+    *   You can replace control digits with zeros when calling the function.
+    *
+    *   This function requires:
+    *           - replaceLetterWithDigits
+    *           - accountLegthPerCountry (table)
+    *
+    *   Usage:
+    *           echo getIBANControlDigits( 'GB00WEST12345698765432' );
+    *   Returns:
+    *           82
+    */
+    function getIBANControlDigits( $accNumber ) {
+        $countryCode = "";
+        $accountLength = 0;
+        $accRearranged = "";
+        $accWithoutLetters = "";
+        $accMod97 = 0;
+        $digits = "";
+
         $countryCode = substr( $accNumber, 0, 2 );
+        $accountLength = getAccountLength( $countryCode );
 
-        if( $countryCode && ( array_key_exists( $countryCode, $accountLengthPerCountry ) ) ) {
-            $accountLength = $accountLengthPerCountry[ $countryCode ];
-
+        if( isSepaCountry( $countryCode ) ) {
             if( strlen( $accNumber ) == $accountLength ) {
                 /* Replace the two check digits by 00 (e.g., GB00 for the UK) and
                     Move the four initial characters to the end of the string. */

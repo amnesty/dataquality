@@ -23,4 +23,22 @@
             $this->assertEquals( '1234567890', replaceLetterWithDigits( '1234567890' ) );
             $this->assertEmpty( replaceLetterWithDigits( '' ) );
         }
+
+        public function testGetAccountLength() {
+            $this->assertEquals( 22, getAccountLength( 'GB' ) );
+            $this->assertEquals( 0, getAccountLength( 'US' ) );
+            $this->assertEquals( 0, getAccountLength( '' ) );
+        }
+
+        public function testIsSepaCountry() {
+            $this->assertTrue( isSepaCountry( 'ES' ) );
+            $this->assertFalse( isSepaCountry( 'US' ) );
+            $this->assertFalse( isSepaCountry( '' ) );
+        }
+
+        public function testIsValidIban() {
+            $this->assertTrue( isValidIBAN( 'GB82WEST12345698765432' ) );
+            $this->assertFalse( isValidIBAN( 'GB00WEST12345698765432' ) );
+            $this->assertFalse( isValidIBAN( '' ) );
+        }
     }
