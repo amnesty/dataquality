@@ -1,0 +1,2 @@
+SELECT replaceCharactersNotInPattern( 'ABC123-?:', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', '0' ) as newstring;
+SELECT replaceCharactersNotInPattern( '12345', '0123456789', '0' ) as newstring;

@@ -1,0 +1,9 @@
+SELECT replaceLetterWithDigits( '510007547061BE00' ) AS newstring;
+newstring
+510007547061111400
+SELECT replaceLetterWithDigits( '1234567890' ) AS newstring;
+newstring
+1234567890
+SELECT replaceLetterWithDigits( '' ) AS newstring;
+newstring
+

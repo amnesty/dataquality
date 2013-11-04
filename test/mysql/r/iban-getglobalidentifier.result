@@ -1,0 +1,3 @@
+SELECT getGlobalIdentifier( 'G28667152', 'ES', '' ) AS globalid;
+globalid
+ES03000G28667152
