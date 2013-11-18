@@ -2,10 +2,10 @@
     require_once( '../../src/php/iban.php' );
 
     class IbanTest extends PHPUnit_Framework_TestCase {
-        public function testGetIbanControlDigits() {
-            $this->assertEquals( '82', getIBANControlDigits( 'GB00WEST12345698765432' ) );
-            $this->assertEmpty( getIBANControlDigits( '1234567890' ) );
-            $this->assertEmpty( getIBANControlDigits( '' ) );
+        public function testGetIbanCheckDigits() {
+            $this->assertEquals( '82', getIBANCheckDigits( 'GB00WEST12345698765432' ) );
+            $this->assertEmpty( getIBANCheckDigits( '1234567890' ) );
+            $this->assertEmpty( getIBANCheckDigits( '' ) );
         }
 
         public function testGetGlobalIdentifier() {

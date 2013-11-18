@@ -20,7 +20,7 @@
 
         if ( isSepaCountry( $countryCode ) ) {
             if ( strlen( $accNumber ) == getAccountLength( $countryCode ) ) {
-                if ( $writenDigits == getIBANControlDigits( $accNumber ) ) {
+                if ( $writenDigits == getIBANCheckDigits( $accNumber ) ) {
                     $isValid = TRUE;
                 }
             }
@@ -104,18 +104,18 @@
     *   format (without spaces), as described in the ISO 13616-Compliant
     *   IBAN Formats document.
     *
-    *   You can replace control digits with zeros when calling the function.
+    *   You can replace check digits with zeros when calling the function.
     *
     *   This function requires:
     *           - replaceLetterWithDigits
     *           - accountLegthPerCountry (table)
     *
     *   Usage:
-    *           echo getIBANControlDigits( 'GB00WEST12345698765432' );
+    *           echo getIBANCheckDigits( 'GB00WEST12345698765432' );
     *   Returns:
     *           82
     */
-    function getIBANControlDigits( $accNumber ) {
+    function getIBANCheckDigits( $accNumber ) {
         $countryCode = "";
         $accountLength = 0;
         $accRearranged = "";
