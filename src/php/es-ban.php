@@ -1,9 +1,9 @@
 <?php
    /*
     *   This function expects the different parts of an Spanish account as
-    *   parameters: entity, office, control digits and account.
+    *   parameters: entity, office, check digits and account.
     *
-    *   This function returns 1 if the control digit is correct. 0 if it is not.
+    *   This function returns 1 if the check digit is correct. 0 if it is not.
     *
     *   Usage:
     *           echo isValidAccountNumber( '1234', '1234', '16', '1234567890' );
@@ -14,7 +14,7 @@
         $correctCD = "";
 
         if( respectsAccountPattern ( $entity, $office, $account ) ) {
-            $correctCD = getBankAccountControlDigits( $entity, $office, $account );
+            $correctCD = getBankAccountCheckDigits( $entity, $office, $account );
         }
 
         return ( ( $correctCD == $CD ) && ( $correctCD != "" ) );
@@ -24,14 +24,14 @@
     *   This function expects the different parts of an Spanish account as
     *   parameters: entity, office and account.
     *
-    *   This function returns the two control digits for the account number.
+    *   This function returns the two check digits for the account number.
     *
     *   Usage:
-    *           echo getBankAccountControlDigits( '1234', '1234', '1234567890' );
+    *           echo getBankAccountCheckDigits( '1234', '1234', '1234567890' );
     *   Returns:
     *           16
     */
-    function getBankAccountControlDigits( $entity, $office, $account ) {
+    function getBankAccountCheckDigits( $entity, $office, $account ) {
         $entitySum = 0;
         $officeSum = 0;
         $accountSum = 0;
@@ -79,7 +79,7 @@
     *       - A string of 4 characters lenght, only numbers, for the office
     *       - A string of 10 characters lenght, only numbers, for the account
     *
-    *   This function does not validate the account control digits. Only validates
+    *   This function does not validate the account check digits. Only validates
     *   its structure.
     *
     *   This function returns:

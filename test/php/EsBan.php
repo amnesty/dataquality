@@ -2,9 +2,9 @@
     require_once( '../../src/php/es-ban.php' );
 
     class EsBanTest extends PHPUnit_Framework_TestCase {
-        public function testGetBankAccountControlDigits() {
-            $this->assertEquals( '16', getBankAccountControlDigits( '1234', '1234', '1234567890' ) );
-            $this->assertEquals( '', getBankAccountControlDigits( 'AAAA', 'AAAA', 'AAAAAAAAAA' ) );
+        public function testGetBankAccountCheckDigits() {
+            $this->assertEquals( '16', getBankAccountCheckDigits( '1234', '1234', '1234567890' ) );
+            $this->assertEquals( '', getBankAccountCheckDigits( 'AAAA', 'AAAA', 'AAAAAAAAAA' ) );
         }
 
         public function testIsValidAccountNumber() {
