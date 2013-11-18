@@ -4,7 +4,7 @@ CREATE FUNCTION isValidIBAN( accNumber VARCHAR(64) )
     RETURNS INT
     DETERMINISTIC
     READS SQL DATA
-    COMMENT 'Verifies the structure of an IBAN and its control digits'
+    COMMENT 'Verifies the structure of an IBAN and its check digits'
 BEGIN
     /*
         This function expects the entire account number in the electronic
@@ -31,7 +31,7 @@ BEGIN
 
     IF ( isSepaCountry( countryCode ) ) THEN
         IF ( LENGTH( accNumber ) = getAccountLength( countryCode ) ) THEN
-            IF ( writenDigits = getIBANControlDigits( accNumber ) ) THEN
+            IF ( writenDigits = getIBANCheckDigits( accNumber ) ) THEN
                 SET isValid = 1;
             END IF;
         END IF;
@@ -136,27 +136,27 @@ BEGIN
     RETURN accountLength;
 END $$
 
-DROP FUNCTION IF EXISTS getIBANControlDigits $$
+DROP FUNCTION IF EXISTS getIBANCheckDigits $$
 
-CREATE FUNCTION getIBANControlDigits( accNumber VARCHAR(64) )
+CREATE FUNCTION getIBANCheckDigits( accNumber VARCHAR(64) )
     RETURNS VARCHAR(64)
     DETERMINISTIC
     READS SQL DATA
-    COMMENT 'Obtains the correct IBAN control digits for a given account number'
+    COMMENT 'Obtains the correct IBAN check digits for a given account number'
 BEGIN
     /*
         This function expects the entire account number in the electronic
         format (without spaces), as described in the ISO 13616-Compliant
         IBAN Formats document.
 
-        You can replace control digits with zeros when calling the function.
+        You can replace check digits with zeros when calling the function.
 
         This function requires:
                 - replaceLetterWithDigits
                 - getAccountLength
 
         Usage:
-            SELECT getIBANControlDigits( 'GB00WEST12345698765432' );
+            SELECT getIBANCheckDigits( 'GB00WEST12345698765432' );
         Returns:
             82
     */

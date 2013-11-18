@@ -1,3 +1,3 @@
-SELECT getIBANControlDigits( 'GB00WEST12345698765432' ) AS cd;
-SELECT getIBANControlDigits( '1234567890' ) AS cd;
-SELECT getIBANControlDigits( '' ) AS cd;
+SELECT getIBANCheckDigits( 'GB00WEST12345698765432' ) AS cd;
+SELECT getIBANCheckDigits( '1234567890' ) AS cd;
+SELECT getIBANCheckDigits( '' ) AS cd;
