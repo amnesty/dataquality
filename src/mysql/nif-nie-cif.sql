@@ -8,7 +8,7 @@ CREATE FUNCTION isValidIdNumber( docNumber VARCHAR(15) )
 BEGIN
     /*
         This function validates a Spanish identification number
-        verifying its control digits.
+        verifying its check digits.
 
         NIFs and NIEs are personal numbers.
         CIFs are corporates.
@@ -56,7 +56,7 @@ CREATE FUNCTION isValidNIF( docNumber VARCHAR(15) )
 BEGIN
     /*
         This function validates a Spanish identification number
-        verifying its control digits.
+        verifying its check digits.
 
         This function is intended to work with NIF numbers.
 
@@ -116,7 +116,7 @@ CREATE FUNCTION isValidNIE( docNumber VARCHAR(15) )
 BEGIN
     /*
         This function validates a Spanish identification number
-        verifying its control digits.
+        verifying its check digits.
 
         This function is intended to work with NIE numbers.
 
@@ -156,7 +156,7 @@ BEGIN
         IF ( fixedDocNumber LIKE 'T%') THEN
             SET isValid = 1;
         ELSE
-            /* The algorithm for validating the control digits of a NIE number is
+            /* The algorithm for validating the check digits of a NIE number is
                 identical to the altorithm for validating NIF numbers. We only have to
                 replace Y, X and Z with 1, 0 and 2 respectively; and then, run
                 the NIF altorithm */
@@ -182,7 +182,7 @@ CREATE FUNCTION isValidCIF( docNumber VARCHAR(15) )
 BEGIN
     /*
         This function validates a Spanish identification number
-        verifying its control digits.
+        verifying its check digits.
 
         This function is intended to work with CIF numbers.
 
@@ -272,7 +272,7 @@ BEGIN
     /*
         This function validates the format of a given string in order to
         see if it fits with NIE format. Practically, it performs a validation
-        over a NIE, except this function does not check the control digit.
+        over a NIE, except this function does not check the check digit.
 
         This function is intended to work with NIE numbers.
 
@@ -309,7 +309,7 @@ BEGIN
     /*
         This function validates the format of a given string in order to
         see if it fits with CIF format. Practically, it performs a validation
-        over a CIF, except this function does not check the control digit.
+        over a CIF, except this function does not check the check digit.
 
         This function is intended to work with CIF numbers.
 
@@ -346,13 +346,13 @@ CREATE FUNCTION getNIFControlDigit( docNumber VARCHAR(15) )
     RETURNS VARCHAR(1)
     DETERMINISTIC
     READS SQL DATA
-    COMMENT 'This function calculates the correct control digit for a Spanish NIF'
+    COMMENT 'This function calculates the correct check digit for a Spanish NIF'
 BEGIN
     /*
-        This function calculates the control digit for an individual Spanish
+        This function calculates the check digit for an individual Spanish
         identification number (NIF).
 
-        You can replace control digit with a zero when calling the function.
+        You can replace check digit with a zero when calling the function.
 
         This function is used by:
             - isValidNIF
@@ -361,7 +361,7 @@ BEGIN
             - isValidNIFFormat
 
         This function returns:
-            - Returns control digit if provided string had a correct NIF structure
+            - Returns check digit if provided string had a correct NIF structure
             - An empty string otherwise
 
         Usage:
@@ -409,13 +409,13 @@ CREATE FUNCTION getCIFControlDigit( docNumber VARCHAR(15) )
     RETURNS VARCHAR(1)
     DETERMINISTIC
     READS SQL DATA
-    COMMENT 'This function calculates the correct control digit for a Spanish CIF'
+    COMMENT 'This function calculates the correct check digit for a Spanish CIF'
 BEGIN
     /*
-        This function calculates the control digit for a corporate Spanish
+        This function calculates the check digit for a corporate Spanish
         identification number (CIF).
 
-        You can replace control digit with a zero when calling the function.
+        You can replace check digit with a zero when calling the function.
 
         This function is used by:
             - isValidCIF
@@ -424,7 +424,7 @@ BEGIN
             - isValidCIFFormat
 
         This function returns:
-            - Returns control digit if provided string had a correct CIF structure
+            - Returns check digit if provided string had a correct CIF structure
             - An empty string otherwise
 
         Usage:
@@ -473,7 +473,7 @@ BEGIN
             ELSE
                 0 END;
 
-        /* If CIF number starts with P, Q, S, N, W or R, control digit sould be a letter */
+        /* If CIF number starts with P, Q, S, N, W or R, check digit sould be a letter */
         IF ( INSTR( 'PQSNWR', firstChar ) > 0 ) THEN
             SET correctDigit = SUBSTRING('JABCDEFGHI', CAST( correctDigit AS UNSIGNED ) + 1, 1);
         END IF;
