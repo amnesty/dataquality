@@ -20,15 +20,15 @@
                 '/^[KLM0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]/' ) );
         }
 
-        public function testGetCIFControlDigit() {
-            $this->assertEquals( '6', getCIFControlDigit( 'H24930830' ) );
-            $this->assertEquals( 'A', getCIFControlDigit( 'Q54626360' ) );
+        public function testGetCIFCheckDigit() {
+            $this->assertEquals( '6', getCIFCheckDigit( 'H24930830' ) );
+            $this->assertEquals( 'A', getCIFCheckDigit( 'Q54626360' ) );
         }
 
-        public function testGetNIFControlDigit() {
-            $this->assertEquals( 'Q', getNIFControlDigit( '335764280' ) );
-            $this->assertEquals( 'C', getNIFControlDigit( '060898220' ) );
-            $this->assertEmpty( getNIFControlDigit( '0A0A0A0A' ) );
+        public function testGetNIFCheckDigit() {
+            $this->assertEquals( 'Q', getNIFCheckDigit( '335764280' ) );
+            $this->assertEquals( 'C', getNIFCheckDigit( '060898220' ) );
+            $this->assertEmpty( getNIFCheckDigit( '0A0A0A0A' ) );
         }
 
         public function testIsValidCIFFormat() {
