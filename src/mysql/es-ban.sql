@@ -6,13 +6,13 @@ CREATE FUNCTION isValidAccountNumber(
     RETURNS INTEGER
     DETERMINISTIC
     READS SQL DATA
-    COMMENT 'Verifies the structure of an Spanish account number and its control digits'
+    COMMENT 'Verifies the structure of an Spanish account number and its check digits'
 BEGIN
     /*
         This function expects the different parts of an Spanish account as
-        parameters: entity, office, control digits and account.
+        parameters: entity, office, check digits and account.
 
-        This function returns 1 if the control digit is correct. 0 if it is not.
+        This function returns 1 if the check digit is correct. 0 if it is not.
 
         Usage:
                 SELECT isValidAccountNumber( '1234', '1234', '16', '1234567890' );
@@ -25,30 +25,30 @@ BEGIN
     SET correctCD = '';
 
     IF( respectsAccountPattern ( entity, office, account ) ) THEN
-        SET correctCD = getBankAccountControlDigits( entity, office, account );
+        SET correctCD = getBankAccountCheckDigits( entity, office, account );
     END IF;
 
     RETURN CASE WHEN correctCD = CD AND correctCD <> '' THEN 1 ELSE 0 END;
 END$$
 
-DROP FUNCTION IF EXISTS getBankAccountControlDigits $$
+DROP FUNCTION IF EXISTS getBankAccountCheckDigits $$
 
-CREATE FUNCTION getBankAccountControlDigits(
+CREATE FUNCTION getBankAccountCheckDigits(
     entity VARCHAR(4), office VARCHAR(4), account VARCHAR(10) )
 
     RETURNS VARCHAR(2)
     DETERMINISTIC
     READS SQL DATA
-    COMMENT 'Obtains the correct control digits for a given Spanish account number'
+    COMMENT 'Obtains the correct check digits for a given Spanish account number'
 BEGIN
     /*
         This function expects the different parts of an Spanish account as
         parameters: entity, office and account.
 
-        This function returns the two control digits for the account number.
+        This function returns the two check digits for the account number.
 
         Usage:
-                SELECT getBankAccountControlDigits( '1234', '1234', '1234567890' );
+                SELECT getBankAccountCheckDigits( '1234', '1234', '1234567890' );
         Returns:
                 16
     */
@@ -113,7 +113,7 @@ BEGIN
             - A string of 4 characters lenght, only numbers, for the office
             - A string of 10 characters lenght, only numbers, for the account
 
-        This function does not validate the account control digits. Only validates
+        This function does not validate the account check digits. Only validates
         its structure.
 
         This function returns:

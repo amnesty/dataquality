@@ -1,0 +1,6 @@
+SELECT getBankAccountCheckDigits( '1234', '1234', '1234567890' ) AS cd;
+cd
+16
+SELECT getBankAccountCheckDigits( 'AAAA', 'AAAA', 'AAAAAAAAAA' ) AS cd;
+cd
+
