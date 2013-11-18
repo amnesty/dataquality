@@ -1,0 +1,2 @@
+SELECT getCIFCheckDigit( 'H24930830' ) AS cd;
+SELECT getCIFCheckDigit( 'Q54626360' ) AS cd;

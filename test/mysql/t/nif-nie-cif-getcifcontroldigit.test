@@ -1,2 +1,0 @@
-SELECT getCIFControlDigit( 'H24930830' ) AS cd;
-SELECT getCIFControlDigit( 'Q54626360' ) AS cd;

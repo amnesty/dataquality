@@ -65,7 +65,7 @@ BEGIN
 
         This function requires:
             - isValidCIFFormat
-            - getNIFControlDigit
+            - getNIFCheckDigit
 
         This function returns:
             1: If specified identification number is correct
@@ -96,7 +96,7 @@ BEGIN
     SET writtenDigit = RIGHT( fixedDocNumber, 1 );
         
     IF ( isValidNIFFormat( fixedDocNumber ) = 1 ) THEN
-        SET correctDigit = getNIFControlDigit( fixedDocNumber );
+        SET correctDigit = getNIFCheckDigit( fixedDocNumber );
 
         IF ( writtenDigit = correctDigit ) THEN
             SET isValid = 1;
@@ -191,7 +191,7 @@ BEGIN
 
         This function requires:
             - isValidCIFFormat
-            - getCIFControlDigit
+            - getCIFCheckDigit
 
         This function returns:
             1: If specified identification number is correct
@@ -217,7 +217,7 @@ BEGIN
     SET writtenDigit = RIGHT( fixedDocNumber, 1 );
         
     IF ( isValidCIFFormat( fixedDocNumber ) = 1 ) THEN
-        SET correctDigit = getCIFControlDigit( fixedDocNumber );
+        SET correctDigit = getCIFCheckDigit( fixedDocNumber );
 
         IF ( writtenDigit = correctDigit ) THEN
             SET isValid = 1;
@@ -238,7 +238,7 @@ BEGIN
     /*
         This function validates the format of a given string in order to
         see if it fits with NIF format. Practically, it performs a validation
-        over a NIF, except this function does not check the control digit.
+        over a NIF, except this function does not check the check digit.
 
         This function is intended to work with NIF numbers.
 
@@ -340,9 +340,9 @@ BEGIN
             '[ABCDEFGHJUV][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]' );    
 END $$
 
-DROP FUNCTION IF EXISTS getNIFControlDigit $$
+DROP FUNCTION IF EXISTS getNIFCheckDigit $$
 
-CREATE FUNCTION getNIFControlDigit( docNumber VARCHAR(15) )
+CREATE FUNCTION getNIFCheckDigit( docNumber VARCHAR(15) )
     RETURNS VARCHAR(1)
     DETERMINISTIC
     READS SQL DATA
@@ -365,7 +365,7 @@ BEGIN
             - An empty string otherwise
 
         Usage:
-            SELECT getNIFControlDigit( '335764280' )
+            SELECT getNIFCheckDigit( '335764280' )
         Returns:
             Q
     */
@@ -403,9 +403,9 @@ BEGIN
     RETURN correctLetter;
 END $$
 
-DROP FUNCTION IF EXISTS getCIFControlDigit $$
+DROP FUNCTION IF EXISTS getCIFCheckDigit $$
 
-CREATE FUNCTION getCIFControlDigit( docNumber VARCHAR(15) )
+CREATE FUNCTION getCIFCheckDigit( docNumber VARCHAR(15) )
     RETURNS VARCHAR(1)
     DETERMINISTIC
     READS SQL DATA
@@ -428,7 +428,7 @@ BEGIN
             - An empty string otherwise
 
         Usage:
-            SELECT getCIFControlDigit( 'H24930830' )
+            SELECT getCIFCheckDigit( 'H24930830' )
         Returns:
             6
     */
@@ -544,7 +544,7 @@ BEGIN
         For instance, it returns 6 for 123 (as it sums 1 + 2 + 3).
 
         This function is used by:
-            - getCIFControlDigit
+            - getCIFCheckDigit
 
         Usage:
             SELECT sumDigits( 12345 )

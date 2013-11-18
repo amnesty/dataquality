@@ -1,3 +1,0 @@
-SELECT getNIFControlDigit( '335764280' ) AS cd;
-SELECT getNIFControlDigit( '060898220' ) AS cd;
-SELECT getNIFControlDigit( '0A0A0A0A' ) AS cd;
