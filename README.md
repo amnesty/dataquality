@@ -1,7 +1,7 @@
 Data Quality
 ============
 
-Data quality functions allows you to perform certain validations in your data, such as verify bakc account check digits, correct the capitalization of names and surnames, etc.
+Data quality functions allows you to perform certain validations in your data, such as verify bank account check digits, correct the capitalization of names and surnames, etc.
 
 What kind of validations can I find?
 ----------------------------------------------------
