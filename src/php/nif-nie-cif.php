@@ -318,14 +318,12 @@
         if( isValidNIFFormat( $fixedDocNumber ) ) {
             $writtenLetter = substr( $fixedDocNumber, -1 );
 
-            if( isValidNIFFormat( $fixedDocNumber ) ) {
-                $fixedDocNumber = str_replace( 'K', '0', $fixedDocNumber );
-                $fixedDocNumber = str_replace( 'L', '0', $fixedDocNumber );
-                $fixedDocNumber = str_replace( 'M', '0', $fixedDocNumber );
+            $fixedDocNumber = str_replace( 'K', '0', $fixedDocNumber );
+            $fixedDocNumber = str_replace( 'L', '0', $fixedDocNumber );
+            $fixedDocNumber = str_replace( 'M', '0', $fixedDocNumber );
 
-                $position = substr( $fixedDocNumber, 0, 8 ) % 23;
-                $correctLetter = substr( $keyString, $position, 1 );
-            }
+            $position = substr( $fixedDocNumber, 0, 8 ) % 23;
+            $correctLetter = substr( $keyString, $position, 1 );
         }
 
         return $correctLetter;

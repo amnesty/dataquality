@@ -390,14 +390,12 @@ BEGIN
     IF ( isValidNIFFormat( fixedDocNumber ) = 1 ) THEN
         SET writtenLetter = RIGHT( fixedDocNumber, 1 );
             
-        IF ( isValidNIFFormat ( fixedDocNumber ) = 1 ) THEN
-            SET fixedDocNumber = REPLACE(fixedDocNumber, 'K', '0');
-            SET fixedDocNumber = REPLACE(fixedDocNumber, 'L', '0');
-            SET fixedDocNumber = REPLACE(fixedDocNumber, 'M', '0');
+        SET fixedDocNumber = REPLACE(fixedDocNumber, 'K', '0');
+        SET fixedDocNumber = REPLACE(fixedDocNumber, 'L', '0');
+        SET fixedDocNumber = REPLACE(fixedDocNumber, 'M', '0');
 
-            SET position = LEFT(fixedDocNumber, 8) % 23;
-            SET correctLetter = SUBSTRING( keyString, position + 1, 1 );
-        END IF;
+        SET position = LEFT(fixedDocNumber, 8) % 23;
+        SET correctLetter = SUBSTRING( keyString, position + 1, 1 );
     END IF;
 
     RETURN correctLetter;
