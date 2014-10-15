@@ -86,7 +86,7 @@ QUnit.test( "testIsValidNIF", function( assert ) {
     assert.ok( ! isValidNIF( '11111111A' ), 'isValidNIF returns false if check digit is wrong' );
 } );
 
-QUnit.test( "testIsValidNIF", function( assert ) {
+QUnit.test( "testIsValidIdNumber", function( assert ) {
     assert.ok( isValidIdNumber( '11111111H' ), 'isValidIdNumber returns true for valid NIFs' );
     assert.ok( ! isValidIdNumber( '11111111A' ), 'isValidIdNumber returns false for invalid NIFs' );
     assert.ok( isValidIdNumber( 'X6089822C' ), 'isValidIdNumber returns true for valid NIEs' );
