@@ -64,7 +64,7 @@ BEGIN
             - isValidIdNumber
 
         This function requires:
-            - isValidCIFFormat
+            - isValidNIFFormat
             - getNIFCheckDigit
 
         This function returns:
