@@ -8,18 +8,13 @@ CREATE FUNCTION isValidAccountNumber(
     READS SQL DATA
     COMMENT 'Verifies the structure of an Spanish account number and its check digits'
 BEGIN
-    /*
-        This function expects the different parts of an Spanish account as
-        parameters: entity, office, check digits and account.
-
-        This function returns 1 if the check digit is correct. 0 if it is not.
-
-        Usage:
-                SELECT isValidAccountNumber( '1234', '1234', '16', '1234567890' );
-        Returns:
-                1
+   /*
+    * isValidAccountNumber validates an Spanish bank account by verifying
+    * its structure and check digits.
+    *
+    * @link https://github.com/amnesty/dataquality/wiki/isValidAccountNumber
     */
-
+    
     DECLARE correctCD VARCHAR(2);
 
     SET correctCD = '';
@@ -42,16 +37,11 @@ CREATE FUNCTION getBankAccountCheckDigits(
     COMMENT 'Obtains the correct check digits for a given Spanish account number'
 BEGIN
     /*
-        This function expects the different parts of an Spanish account as
-        parameters: entity, office and account.
-
-        This function returns the two check digits for the account number.
-
-        Usage:
-                SELECT getBankAccountCheckDigits( '1234', '1234', '1234567890' );
-        Returns:
-                16
-    */
+     * getBankAccountCheckDigits calculates the check digits for an Spanish bank
+     * account. To calculate them, it needs the rest of the parts of the account.
+     *
+     * @link https://github.com/amnesty/dataquality/wiki/getBankAccountCheckDigits
+     */
 
     DECLARE entitySum INT;
     DECLARE officeSum INT;
@@ -106,24 +96,11 @@ CREATE FUNCTION respectsAccountPattern(
     READS SQL DATA
     COMMENT 'Validates the structure of a Spanish account number'
 BEGIN
-    /*
-        This function validates the format of a Spanish account number.
-        We consider that the correct format is:
-            - A string of 4 characters lenght, only numbers, for the entity
-            - A string of 4 characters lenght, only numbers, for the office
-            - A string of 10 characters lenght, only numbers, for the account
-
-        This function does not validate the account check digits. Only validates
-        its structure.
-
-        This function returns:
-            1: If specified string respects the pattern
-            0: Otherwise
-
-        Usage:
-            SELECT respectsAccountPattern( '1234', '123A', '1234567890' );
-        Returns:
-            0
+   /*
+    * respectsAccountPattern verifies that three strings respect the
+    * expected pattern for an Spanish bank account number.
+    *
+    * @link https://github.com/amnesty/dataquality/wiki/respectsAccountPattern
     */
     
     DECLARE isValid INT;

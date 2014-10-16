@@ -1,14 +1,9 @@
 <?php
    /*
-    *   This function expects the different parts of an Spanish account as
-    *   parameters: entity, office, check digits and account.
+    * isValidAccountNumber validates an Spanish bank account by verifying
+    * its structure and check digits.
     *
-    *   This function returns 1 if the check digit is correct. 0 if it is not.
-    *
-    *   Usage:
-    *           echo isValidAccountNumber( '1234', '1234', '16', '1234567890' );
-    *   Returns:
-    *           TRUE
+    * @link https://github.com/amnesty/dataquality/wiki/isValidAccountNumber
     */
     function isValidAccountNumber( $entity, $office, $CD, $account ) {
         $correctCD = "";
@@ -20,17 +15,12 @@
         return ( ( $correctCD == $CD ) && ( $correctCD != "" ) );
     }
 
-   /*
-    *   This function expects the different parts of an Spanish account as
-    *   parameters: entity, office and account.
-    *
-    *   This function returns the two check digits for the account number.
-    *
-    *   Usage:
-    *           echo getBankAccountCheckDigits( '1234', '1234', '1234567890' );
-    *   Returns:
-    *           16
-    */
+    /*
+     * getBankAccountCheckDigits calculates the check digits for an Spanish bank
+     * account. To calculate them, it needs the rest of the parts of the account.
+     *
+     * @link https://github.com/amnesty/dataquality/wiki/getBankAccountCheckDigits
+     */
     function getBankAccountCheckDigits( $entity, $office, $account ) {
         $entitySum = 0;
         $officeSum = 0;
@@ -73,23 +63,10 @@
     }
 
    /*
-    *   This function validates the format of a Spanish account number.
-    *   We consider that the correct format is:
-    *       - A string of 4 characters lenght, only numbers, for the entity
-    *       - A string of 4 characters lenght, only numbers, for the office
-    *       - A string of 10 characters lenght, only numbers, for the account
+    * respectsAccountPattern verifies that three strings respect the
+    * expected pattern for an Spanish bank account number.
     *
-    *   This function does not validate the account check digits. Only validates
-    *   its structure.
-    *
-    *   This function returns:
-    *       TRUE: If specified string respects the pattern
-    *       FALSE: Otherwise
-    *
-    *   Usage:
-    *       echo respectsAccountPattern( '1234', '123A', '1234567890' );
-    *   Returns:
-    *       FALSE
+    * @link https://github.com/amnesty/dataquality/wiki/respectsAccountPattern
     */
     function respectsAccountPattern( $entity, $office, $account ) {
         $isValid = TRUE;
