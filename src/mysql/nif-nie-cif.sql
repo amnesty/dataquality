@@ -6,26 +6,15 @@ CREATE FUNCTION isValidIdNumber( docNumber VARCHAR(15) )
     READS SQL DATA
     COMMENT 'Validates a Spanish identification number'
 BEGIN
-    /*
-        This function validates a Spanish identification number
-        verifying its check digits.
-
-        NIFs and NIEs are personal numbers.
-        CIFs are corporates.
-
-        This function requires:
-            - isValidCIF and isValidCIFFormat
-            - isValidNIE and isValidNIEFormat
-            - isValidNIF and isValidNIFFormat
-
-        This function returns:
-            1: If specified identification number is correct
-            0: Otherwise
-
-        Usage:
-            SELECT isValidIdNumber( 'G28667152' );
-        Returns:
-            1
+   /*
+    * isValidIdNumber validates a Spanish identification number
+    * verifying its check digits. It doesn't need to be told
+    * about the document type, that can be a NIF, a NIE or a CIF.
+    * 
+    * - NIFs and NIEs are personal numbers.
+    * - CIFs are corporates.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidIdNumber
     */
 
     DECLARE fixedDocNumber VARCHAR(15);
@@ -54,30 +43,12 @@ CREATE FUNCTION isValidNIF( docNumber VARCHAR(15) )
     READS SQL DATA
     COMMENT 'Validates a Spanish identification number (only accepts NIF numbers)'
 BEGIN
-    /*
-        This function validates a Spanish identification number
-        verifying its check digits.
-
-        This function is intended to work with NIF numbers.
-
-        This function is used by:
-            - isValidIdNumber
-
-        This function requires:
-            - isValidNIFFormat
-            - getNIFCheckDigit
-
-        This function returns:
-            1: If specified identification number is correct
-            0: Otherwise
-
-        Algorithm works as described in:
-            http://www.interior.gob.es/dni-8/calculo-del-digito-de-control-del-nif-nie-2217
-
-        Usage:
-            SELECT isValidNIF( '33576428Q' );
-        Returns:
-            1
+   /*
+    * isValidNIF validates the check digits of an identification
+    * number, after verifying the string structure actually fits
+    * the NIF pattern.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidNIF
     */
 
     DECLARE isValid VARCHAR(15);
@@ -114,30 +85,11 @@ CREATE FUNCTION isValidNIE( docNumber VARCHAR(15) )
     READS SQL DATA
     COMMENT 'Validates a Spanish identification number (only accepts NIE numbers)'
 BEGIN
-    /*
-        This function validates a Spanish identification number
-        verifying its check digits.
-
-        This function is intended to work with NIE numbers.
-
-        This function is used by:
-            - isValidIdNumber
-
-        This function requires:
-            - isValidNIEFormat
-            - isValidNIF
-
-        This function returns:
-            1: If specified identification number is correct
-            0: Otherwise
-
-        Algorithm works as described in:
-            http://www.interior.gob.es/dni-8/calculo-del-digito-de-control-del-nif-nie-2217
-
-        Usage:
-            SELECT isValidNIE( 'X6089822C' )
-        Returns:
-            1
+   /*
+    * isValidNIE validates the check digits of an identification number,
+    * after verifying the string structure actually fits the NIE pattern.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidNIE
     */
 
     DECLARE isValid INT;
@@ -180,30 +132,11 @@ CREATE FUNCTION isValidCIF( docNumber VARCHAR(15) )
     READS SQL DATA
     COMMENT 'Validates a Spanish identification number (only accepts CIF numbers)'
 BEGIN
-    /*
-        This function validates a Spanish identification number
-        verifying its check digits.
-
-        This function is intended to work with CIF numbers.
-
-        This function is used by:
-            - isValidIdNumber
-
-        This function requires:
-            - isValidCIFFormat
-            - getCIFCheckDigit
-
-        This function returns:
-            1: If specified identification number is correct
-            0: Otherwise
-
-        CIF numbers structure is defined at:
-        BOE number 49. February 26th, 2008 (article 2)
-
-        Usage:
-            SELECT isValidCIF( 'C4090266J' );
-        Returns:
-            1
+   /*
+    * isValidCIF validates the check digits of an identification number,
+    * after verifying the string structure actually fits the CIF pattern.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidCIF
     */
     
     DECLARE isValid VARCHAR(15);
@@ -235,25 +168,11 @@ CREATE FUNCTION isValidNIFFormat( docNumber VARCHAR(15) )
     READS SQL DATA
     COMMENT 'Validates the format of a given string against NIF pattern'
 BEGIN
-    /*
-        This function validates the format of a given string in order to
-        see if it fits with NIF format. Practically, it performs a validation
-        over a NIF, except this function does not check the check digit.
-
-        This function is intended to work with NIF numbers.
-
-        This function is used by:
-            - isValidIdNumber
-            - isValidNIF
-
-        This function returns:
-            1: If specified string respects NIF format
-            0: Otherwise
-
-        Usage:
-            SELECT isValidNIFFormat( '33576428Q' )
-        Returns:
-            1
+   /*
+    * isValidNIFFormat tests a string against a regexp pattern
+    * to see if the string fits the NIF structure.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidNIFFormat
     */
         
     RETURN respectsDocPattern(
@@ -269,28 +188,11 @@ CREATE FUNCTION isValidNIEFormat( docNumber VARCHAR(15) )
     READS SQL DATA
     COMMENT 'Validates the format of a given string against NIE pattern'
 BEGIN
-    /*
-        This function validates the format of a given string in order to
-        see if it fits with NIE format. Practically, it performs a validation
-        over a NIE, except this function does not check the check digit.
-
-        This function is intended to work with NIE numbers.
-
-        This function is used by:
-            - isValidIdNumber
-            - isValidNIE
-
-        This function requires:
-            - respectsDocPattern
-
-        This function returns:
-            1: If specified string respects NIE format
-            0: Otherwise
-
-        Usage:
-            SELECT isValidNIEFormat( 'X6089822C' )
-        Returns:
-            1
+   /*
+    * isValidNIEFormat tests a string against a regexp pattern to see
+    * if the string fits the NIE structure.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidNIEFormat
     */
 
     RETURN respectsDocPattern(
@@ -306,28 +208,11 @@ CREATE FUNCTION isValidCIFFormat( docNumber VARCHAR(15) )
     READS SQL DATA
     COMMENT 'Validates the format of a given string against CIF pattern'
 BEGIN
-    /*
-        This function validates the format of a given string in order to
-        see if it fits with CIF format. Practically, it performs a validation
-        over a CIF, except this function does not check the check digit.
-
-        This function is intended to work with CIF numbers.
-
-        This function is used by:
-            - isValidIdNumber
-            - isValidCIF
-
-        This function requires:
-            - respectsDocPattern
-
-        This function returns:
-            1: If specified string respects CIF format
-            0: Otherwise
-
-        Usage:
-            SELECT isValidCIFFormat( 'H24930836' )
-        Returns:
-            1
+   /*
+    * isValidCIFFormat tests a string against a regexp pattern to see
+    * if the string fits the CIF structure.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidCIFFormat
     */
 
     RETURN
@@ -348,26 +233,14 @@ CREATE FUNCTION getNIFCheckDigit( docNumber VARCHAR(15) )
     READS SQL DATA
     COMMENT 'This function calculates the correct check digit for a Spanish NIF'
 BEGIN
-    /*
-        This function calculates the check digit for an individual Spanish
-        identification number (NIF).
-
-        You can replace check digit with a zero when calling the function.
-
-        This function is used by:
-            - isValidNIF
-
-        This function requires:
-            - isValidNIFFormat
-
-        This function returns:
-            - Returns check digit if provided string had a correct NIF structure
-            - An empty string otherwise
-
-        Usage:
-            SELECT getNIFCheckDigit( '335764280' )
-        Returns:
-            Q
+   /*
+    * getNIFCheckDigit obtains and returns the corresponding check digit for a
+    * given string. In order to work, the string must match the NIF pattern.
+    * 
+    * This function has been written to be used from isValidNIF as a helper,
+    * but it can still be calle directly.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/getNIFCheckDigit
     */
 
     DECLARE fixedDocNumber VARCHAR(15);
@@ -409,26 +282,15 @@ CREATE FUNCTION getCIFCheckDigit( docNumber VARCHAR(15) )
     READS SQL DATA
     COMMENT 'This function calculates the correct check digit for a Spanish CIF'
 BEGIN
-    /*
-        This function calculates the check digit for a corporate Spanish
-        identification number (CIF).
-
-        You can replace check digit with a zero when calling the function.
-
-        This function is used by:
-            - isValidCIF
-
-        This function requires:
-            - isValidCIFFormat
-
-        This function returns:
-            - Returns check digit if provided string had a correct CIF structure
-            - An empty string otherwise
-
-        Usage:
-            SELECT getCIFCheckDigit( 'H24930830' )
-        Returns:
-            6
+   /*
+    * getCIFCheckDigit obtains and returns the corresponding check digit
+    * for a given string. In order to work, the string must match the
+    * CIF pattern.
+    * 
+    * This function has been written to be used from isValidCIF as a
+    * helper, but it can still be calle directly.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/getCIFCheckDigit
     */
     
     DECLARE fixedDocNumber VARCHAR(15);
@@ -488,29 +350,14 @@ CREATE FUNCTION respectsDocPattern( givenString VARCHAR(15), pattern VARCHAR(64)
     READS SQL DATA
     COMMENT 'Validates a given string respects a regexp pattern'
 BEGIN
-    /*
-        This function validates the format of a given string in order to
-        see if it fits a regexp pattern.
-
-        This function is intended to work with Spanish identification
-        numbers, so it always checks string length (should be 9) and
-        accepts the absence of leading zeros.
-
-        This function is used by:
-            - isValidNIFFormat
-            - isValidNIEFormat
-            - isValidCIFFormat
-
-        This function returns:
-            1: If specified string respects the pattern
-            0: Otherwise
-
-        Usage:
-            SELECT respectsDocPattern(
-                '33576428Q',
-                '[KLM0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]' );
-        Returns:
-            1
+   /*
+    * respectsDocPattern tests a string against a regexp pattern.
+    * 
+    * Actually, this function has been written as a helper for
+    * isValidNIFFormat, isValidNIEFormat and isValidCIFFormat,
+    * but it can still be called directly.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/respectsDocPattern
     */
     
     DECLARE isValid INT;
@@ -535,19 +382,12 @@ CREATE FUNCTION sumDigits ( digits INT )
     READS SQL DATA
     COMMENT 'Performs the sum, one by one, of the digits in a quantity'
 BEGIN
-    /*
-        This function performs the sum, one by one, of the digits
-        in a given quantity.
-
-        For instance, it returns 6 for 123 (as it sums 1 + 2 + 3).
-
-        This function is used by:
-            - getCIFCheckDigit
-
-        Usage:
-            SELECT sumDigits( 12345 )
-        Returns:
-            15
+   /*
+    * sumDigits is an auxiliary function that sums the digits of
+    * the number received. For instance, it returns 6 for 123,
+    * as long as 1+2+3 = 6.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/sumDigits
     */
 
     DECLARE string VARCHAR(16);
@@ -574,22 +414,13 @@ CREATE FUNCTION getIdType( docNumber VARCHAR(15) )
     READS SQL DATA
     COMMENT 'Obtains document type description for Spanish identification numbers'
 BEGIN
-    /*
-        This function obtains the description of a document type
-        for Spanish identification number.
-
-        For instance, if A83217281 is passed, it returns "Sociedad Anónima".
-
-        This function requires:
-            - identificationType (table)
-            - isValidCIFFormat
-            - isValidNIEFormat
-            - isValidNIFFormat
-
-        Usage:
-            SELECT getIdType( 'H67905364' )
-        Returns:
-            Comunidad de propietarios en régimen de propiedad horizontal
+   /*
+    * getIdType returns a description of the type of the given document number.
+    * 
+    * When possible, the description has been taken from an official source.
+    * In all cases, the returned string will be in Spanish.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/getIdType
     */
     
     DECLARE firstChar VARCHAR(1);

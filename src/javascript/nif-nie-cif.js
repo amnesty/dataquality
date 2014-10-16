@@ -1,23 +1,12 @@
    /*
-    *   This function validates a Spanish identification number
-    *   verifying its check digits.
-    *
-    *   NIFs and NIEs are personal numbers.
-    *   CIFs are corporates.
-    *
-    *   This function requires:
-    *       - isValidCIF and isValidCIFFormat
-    *       - isValidNIE and isValidNIEFormat
-    *       - isValidNIF and isValidNIFFormat
-    *
-    *   This function returns:
-    *       TRUE: If specified identification number is correct
-    *       FALSE: Otherwise
-    *
-    *   Usage:
-    *       echo isValidIdNumber( 'G28667152' );
-    *   Returns:
-    *       TRUE
+    * isValidIdNumber validates a Spanish identification number
+    * verifying its check digits. It doesn't need to be told
+    * about the document type, that can be a NIF, a NIE or a CIF.
+    * 
+    * - NIFs and NIEs are personal numbers.
+    * - CIFs are corporates.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidIdNumber
     */
     function isValidIdNumber( docNumber ) {
         fixedDocNumber = docNumber.toUpperCase();
@@ -38,29 +27,11 @@
     }
 
    /*
-    *   This function validates a Spanish identification number
-    *   verifying its check digits.
-    *
-    *   This function is intended to work with NIF numbers.
-    *
-    *   This function is used by:
-    *       - isValidIdNumber
-    *
-    *   This function requires:
-    *       - isValidCIFFormat
-    *       - getNIFCheckDigit
-    *
-    *   This function returns:
-    *       TRUE: If specified identification number is correct
-    *       FALSE: Otherwise
-    *
-    *   Algorithm works as described in:
-    *       http://www.interior.gob.es/dni-8/calculo-del-digito-de-Check-del-nif-nie-2217
-    *
-    *   Usage:
-    *       echo isValidNIF( '33576428Q' );
-    *   Returns:
-    *       TRUE
+    * isValidNIF validates the check digits of an identification
+    * number, after verifying the string structure actually fits
+    * the NIF pattern.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidNIF
     */
     function isValidNIF( docNumber ) {
         var isValid = false;
@@ -88,29 +59,10 @@
     }
 
    /*
-    *   This function validates a Spanish identification number
-    *   verifying its check digits.
-    *
-    *   This function is intended to work with NIE numbers.
-    *
-    *   This function is used by:
-    *       - isValidIdNumber
-    *
-    *   This function requires:
-    *       - isValidNIEFormat
-    *       - isValidNIF
-    *
-    *   This function returns:
-    *       TRUE: If specified identification number is correct
-    *       FALSE: Otherwise
-    *
-    *   Algorithm works as described in:
-    *       http://www.interior.gob.es/dni-8/calculo-del-digito-de-control-del-nif-nie-2217
-    *
-    *   Usage:
-    *       echo isValidNIE( 'X6089822C' )
-    *   Returns:
-    *       TRUE
+    * isValidNIE validates the check digits of an identification number,
+    * after verifying the string structure actually fits the NIE pattern.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidNIE
     */
     function isValidNIE( docNumber ) {
         var isValid = false;
@@ -142,29 +94,10 @@
     }
 
    /*
-    *   This function validates a Spanish identification number
-    *   verifying its check digits.
-    *
-    *   This function is intended to work with CIF numbers.
-    *
-    *   This function is used by:
-    *       - isValidDoc
-    *
-    *   This function requires:
-    *       - isValidCIFFormat
-    *       - getCIFCheckDigit
-    *
-    *   This function returns:
-    *       TRUE: If specified identification number is correct
-    *       FALSE: Otherwise
-    *
-    * CIF numbers structure is defined at:
-    *   BOE number 49. February 26th, 2008 (article 2)
-    *
-    *   Usage:
-    *       echo isValidCIF( 'F43298256' );
-    *   Returns:
-    *       TRUE
+    * isValidCIF validates the check digits of an identification number,
+    * after verifying the string structure actually fits the CIF pattern.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidCIF
     */
     function isValidCIF( docNumber ) {
         var isValid = false;
@@ -188,24 +121,10 @@
     }
 
    /*
-    *   This function validates the format of a given string in order to
-    *   see if it fits with NIF format. Practically, it performs a validation
-    *   over a NIF, except this function does not check the check digit.
-    *
-    *   This function is intended to work with NIF numbers.
-    *
-    *   This function is used by:
-    *       - isValidIdNumber
-    *       - isValidNIF
-    *
-    *   This function returns:
-    *       TRUE: If specified string respects NIF format
-    *       FALSE: Otherwise
-    *
-    *   Usage:
-    *       echo isValidNIFFormat( '33576428Q' )
-    *   Returns:
-    *       TRUE
+    * isValidNIFFormat tests a string against a regexp pattern
+    * to see if the string fits the NIF structure.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidNIFFormat
     */
     function isValidNIFFormat( docNumber ) {
         return respectsDocPattern(
@@ -214,27 +133,10 @@
     }
 
    /*
-    *   This function validates the format of a given string in order to
-    *   see if it fits with NIE format. Practically, it performs a validation
-    *   over a NIE, except this function does not check the check digit.
-    *
-    *   This function is intended to work with NIE numbers.
-    *
-    *   This function is used by:
-    *       - isValidIdNumber
-    *       - isValidNIE
-    *
-    *   This function requires:
-    *       - respectsDocPattern
-    *
-    *   This function returns:
-    *       TRUE: If specified string respects NIE format
-    *       FALSE: Otherwise
-    *
-    *   Usage:
-    *       echo isValidNIEFormat( 'X6089822C' )
-    *   Returns:
-    *       TRUE
+    * isValidNIEFormat tests a string against a regexp pattern to see
+    * if the string fits the NIE structure.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidNIEFormat
     */
     function isValidNIEFormat( docNumber ) {
         return respectsDocPattern(
@@ -243,27 +145,10 @@
     }
 
    /*
-    *   This function validates the format of a given string in order to
-    *   see if it fits with CIF format. Practically, it performs a validation
-    *   over a CIF, but this function does not check the check digit.
-    *
-    *   This function is intended to work with CIF numbers.
-    *
-    *   This function is used by:
-    *       - isValidIdNumber
-    *       - isValidCIF
-    *
-    *   This function requires:
-    *       - respectsDocPattern
-    *
-    *   This function returns:
-    *       TRUE: If specified string respects CIF format
-    *       FALSE: Otherwise
-    *
-    *   Usage:
-    *       echo isValidCIFFormat( 'H24930836' )
-    *   Returns:
-    *       TRUE
+    * isValidCIFFormat tests a string against a regexp pattern to see
+    * if the string fits the CIF structure.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidCIFFormat
     */
     function isValidCIFFormat( docNumber ) {     
         var isValid = false;
@@ -284,25 +169,13 @@
     }
 
    /*
-    *   This function calculates the check digit for an individual Spanish
-    *   identification number (NIF).
-    *
-    *   You can replace check digit with a zero when calling the function.
-    *
-    *   This function is used by:
-    *       - isValidNIF
-    *
-    *   This function requires:
-    *       - isValidNIFFormat
-    *
-    *   This function returns:
-    *       - Returns check digit if provided string had a correct NIF structure
-    *       - An empty string otherwise
-    *
-    *   Usage:
-    *       echo getNIFCheckDigit( '335764280' )
-    *   Returns:
-    *       Q
+    * getNIFCheckDigit obtains and returns the corresponding check digit for a
+    * given string. In order to work, the string must match the NIF pattern.
+    * 
+    * This function has been written to be used from isValidNIF as a helper,
+    * but it can still be calle directly.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/getNIFCheckDigit
     */
     function getNIFCheckDigit( docNumber ) {
         var keyString = 'TRWAGMYFPDXBNJZSQVHLCKE';
@@ -335,26 +208,14 @@
     }
 
    /*
-    *   This function calculates the check digit for a corporate Spanish
-    *   identification number (CIF).
-    *
-    *   You can replace check digit with a zero when calling the function.
-    *
-    *   This function is used by:
-    *       - isValidCIF
-    *
-    *   This function requires:
-    *     - isValidCIFFormat
-    *
-    *   This function returns:
-    *       - The correct check digit if provided string had a
-    *         correct CIF structure
-    *       - An empty string otherwise
-    *
-    *   Usage:
-    *       echo getCIFCheckDigit( 'H24930830' );
-    *   Prints:
-    *       6
+    * getCIFCheckDigit obtains and returns the corresponding check digit
+    * for a given string. In order to work, the string must match the
+    * CIF pattern.
+    * 
+    * This function has been written to be used from isValidCIF as a
+    * helper, but it can still be calle directly.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/getCIFCheckDigit
     */
     function getCIFCheckDigit( docNumber ) {
         var fixedDocNumber = "";
@@ -407,28 +268,13 @@
     }
 
    /*
-    *   This function validates the format of a given string in order to
-    *   see if it fits a regexp pattern.
-    *
-    *   This function is intended to work with Spanish identification
-    *   numbers, so it always checks string length (should be 9) and
-    *   accepts the absence of leading zeros.
-    *
-    *   This function is used by:
-    *       - isValidNIFFormat
-    *       - isValidNIEFormat
-    *       - isValidCIFFormat
-    *
-    *   This function returns:
-    *       TRUE: If specified string respects the pattern
-    *       FALSE: Otherwise
-    *
-    *   Usage:
-    *       echo respectsDocPattern(
-    *           '33576428Q',
-    *           '/^[KLM0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]/' );
-    *   Returns:
-    *       TRUE
+    * respectsDocPattern tests a string against a regexp pattern.
+    * 
+    * Actually, this function has been written as a helper for
+    * isValidNIFFormat, isValidNIEFormat and isValidCIFFormat,
+    * but it can still be called directly.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/respectsDocPattern
     */
     function respectsDocPattern( givenString, pattern ) {
         var isValid = false;
@@ -449,18 +295,11 @@
     }
 
    /*
-    *   This function performs the sum, one by one, of the digits
-    *   in a given quantity.
-    *
-    *   For instance, it returns 6 for 123 (as it sums 1 + 2 + 3).
-    *
-    *   This function is used by:
-    *       - getCIFCheckDigit
-    *
-    *   Usage:
-    *       echo sumDigits( 12345 );
-    *   Returns:
-    *       15
+    * sumDigits is an auxiliary function that sums the digits of
+    * the number received. For instance, it returns 6 for 123,
+    * as long as 1+2+3 = 6.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/sumDigits
     */
     function sumDigits( digits ) {
         var total = 0;
@@ -479,23 +318,13 @@
     }
 
    /*
-    *   This function obtains the description of a document type
-    *   for Spanish identification number.
-    *
-    *   For instance, if A83217281 is passed, it returns "Sociedad Anónima".
-    *
-    *   This function requires:
-    *       - identificationType (table)
-    *       - isValidCIFFormat
-    *       - isValidNIEFormat
-    *       - isValidNIFFormat
-    *
-    *   Usage:
-    *       echo getIdType( 'A49640873' )
-    *   Returns:
-    *       Sociedad Anónima
+    * getIdType returns a description of the type of the given document number.
+    * 
+    * When possible, the description has been taken from an official source.
+    * In all cases, the returned string will be in Spanish.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/getIdType
     */
-
     var identificationType = {
         K: 'Español menor de catorce años o extranjero menor de dieciocho',
         L: 'Español mayor de catorce años residiendo en el extranjero',
