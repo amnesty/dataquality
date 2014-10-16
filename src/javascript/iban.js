@@ -1,16 +1,8 @@
    /*
-    *   This function expects the entire account number in the electronic
-    *   format (without spaces), as described in the ISO 13616-Compliant
-    *   IBAN Formats document.
-    *
-    *   This function returns:
-    *       true: If the given account number is valid.
-    *       false: Otherwise.
-    *
-    *   Usage:
-    *       isValidIBAN( 'GB82WEST12345698765432' );
-    *   Returns:
-    *       true
+    * isValidIBAN validates an IBAN by verifying its structure and
+    * check digits.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isValidIBAN
     */
     function isValidIBAN( accNumber ) {
         var isValid = false;
@@ -29,17 +21,16 @@
     }
 
    /*
-    *   This function expects a country code as parameter. The code must follow
-    *   the ISO format of 2 characters (as in ES for Spain).
-    *
-    *   This function returns:
-    *       - TRUE: If countryCode is a valid Sepa Country Code.
-    *       - FALSE: Otherwise.
-    *
-    *   Usage:
-    *       SELECT isSepaCountry( 'ES' );
-    *   Returns:
-    *       TRUE
+    * isSepaCountry helps to check the first two digits of an IBAN.
+    * These two digits are referring to the country where the
+    * account was created, so they only can correspond to one
+    * of the countries in the Single Euro Payments Area (SEPA) area.
+    * 
+    * A document with a full list of the SEPA countries, its
+    * corresponding IBAN structures and more is available at
+    * the Swift website as IBAN Registry.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/isSepaCountry
     */
     function isSepaCountry( countryCode ) {
         isSepa = false;
@@ -52,17 +43,11 @@
     }
 
    /*
-    *   This function expects a country code as parameter. The code must follow
-    *   the ISO format of 2 characters (as in ES for Spain).
-    *
-    *   This function returns:
-    *       - The expected account length for the given country code.
-    *       - 0: If countryCode is not a country that belongs to the SEPA area.
-    *
-    *   Usage:
-    *       echo getAccountLength( 'GB' );
-    *   Returns:
-    *       22
+    * getAccountLength returns the expected length for an IBAN given
+    * its first two digits. For instance, British accounts have 22
+    * characters when written in IBAN electronic format.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/getAccountLength
     */
     function getAccountLength( countryCode ) {
         var accountLength = 0;
@@ -99,20 +84,13 @@
     }
 
    /*
-    *   This function expects the entire account number in the electronic
-    *   format (without spaces), as described in the ISO 13616-Compliant
-    *   IBAN Formats document.
+    * This function expects the entire account number in the electronic
+    * format (without spaces), as described in the ISO 13616-Compliant
+    * IBAN Formats document.
     *
-    *   You can replace check digits with zeros when calling the function.
+    * You can replace check digits with zeros when calling the function.
     *
-    *   This function requires:
-    *           - replaceLetterWithDigits
-    *           - accountLegthPerCountry (table)
-    *
-    *   Usage:
-    *           echo getIBANCheckDigits( 'GB00WEST12345698765432' );
-    *   Returns:
-    *           82
+    * @link https://github.com/amnesty/dataquality/wiki/getIBANCheckDigits
     */
     function getIBANCheckDigits( accNumber ) {
         var countryCode = "";
@@ -187,19 +165,19 @@
     }
 
    /*
-    *   The identification numbers used in Sepa are calculated from the local
-    *   identification numbers. For instance, if your Spanish (local)
-    *   identification number is G28667152, your global identification
-    *   number must be ES03000G28667152.
-    *
-    *   This function requires:
-    *           - replaceLetterWithDigits
-    *           - replaceCharactersNotInPattern
-    *
-    *   Usage:
-    *           echo getGlobalIdentifier( 'G28667152', 'ES', '' );
-    *   Returns:
-    *           ES03000G28667152
+    * This "global identifier" refers to the code AT-02 created for the
+    * C19.14. The C19.14 is a temporary file format to be used in Spain
+    * until the ISO 20022 XML format is finally adopted.
+    * 
+    * If the IBAN is built by adding a few digits to the national bank
+    * accounts, the AT-02 is build by adding digits to the national
+    * identifier. In the case of Spain, this identifiers are NIFs,
+    * NIEs and CIFs.
+    * 
+    * For instance, the Spanish CIF G28667152, can be expressed
+    * internationally as ES03000G28667152.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/getGlobalIdentifier
     */
     function getGlobalIdentifier( localId, countryCode, suffix ) {
         var withCountry = "";
@@ -250,22 +228,16 @@
     }
 
    /*
-    *   This function replaces unwanted characters from a string with a given
-    *   character.
-    *
-    *   If a string 'ABCDEF%' and a pattern 'ABDF' are given, it returns
-    *   a new string where:
-    *       - the characters in the string that respect the patter remain unchanged
-    *       - other characters are replaced with the given substitution character
-    *
-    *   This function is used by:
-    *       - getGlobalIdentifier
-    *
-    *   Usage:
-    *       SELECT replaceCharactersNotInPattern(
-    *           'ABC123-?:', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', '0' )
-    *   Returns:
-    *       'ABC123000'
+    * replaceCharactersNotInPattern replaces unwanted characters from a string
+    * with a given character.
+    * 
+    * An example:
+    * - We have this string: 1!2/3·A|B@C#
+    * - This are the characters we accept: 123ABC
+    * - This is the character we want to replace extra characters with: 0
+    * - The example would return: 102030A0B0C0
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/replaceCharactersNotInPattern
     */
     function replaceCharactersNotInPattern( givenString, pattern, replaceWith ) {
         var verifyLetter = "";
@@ -285,16 +257,11 @@
     }
 
    /*
-    *   This functions changes letters in a given string
-    *   with its correspondant numbers, as described in
-    *   ECBS EBS204 V3.2 [August 2003] document:
-    *
-    *   A=1, B=2, ..., Y=34, Z=35
-    *
-    *   Usage:
-    *       SELECT replaceLetterWithDigits( '510007547061BE00' )
-    *   Returns:
-    *       510007547061111400
+    * replaceLetterWithDigits changes letters in a given string with its
+    * correspondent numbers, as described in ECBS EBS204 V3.2 [August 2003]
+    * document: A=1, B=2, ..., Y=34, Z=35.
+    * 
+    * @link https://github.com/amnesty/dataquality/wiki/replaceLetterWithDigits
     */
     function replaceLetterWithDigits( accNumber ) {
         var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
