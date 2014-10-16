@@ -26,7 +26,7 @@ QUnit.test( "testReplaceLetterWithDigits", function( assert ) {
 } );
 
 QUnit.test( "testGetAccountLength", function( assert ) {
-     assert.equal(getAccountLength( 'GB' ), 22, 'Returns  tohe string th a SEPA country' );
+    assert.equal(getAccountLength( 'GB' ), 22, 'Returns  tohe string th a SEPA country' );
     assert.equal(getAccountLength( 'US' ), 0, 'If string isn\'t a SEPA country code, returns empty' );
     assert.equal(getAccountLength( '' ), 0, 'If string is empty, returns empty' );
 } );
