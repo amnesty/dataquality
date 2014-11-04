@@ -40,3 +40,4 @@
   String.prototype.addEvery = function ( char, n, removeExisting ) {
     return addEvery( this.toString(), char, n, removeExisting );
   }
+
