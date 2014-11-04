@@ -83,6 +83,23 @@
         return accountLength;
     }
 
+    /*
+     * Auxiliary function. Helps to calculate modulus when working
+     * with big integers.
+     * 
+     * @link http://stackoverflow.com/questions/929910/modulo-in-javascript-large-number
+     */
+    function modulus(divident, divisor) {
+      var partLength = 10;
+
+      while (divident.length > partLength) {
+        var part = divident.substring(0, partLength);
+        divident = (part % divisor) +  divident.substring(partLength);          
+      }
+
+      return divident % divisor;
+    }
+
    /*
     * This function expects the entire account number in the electronic
     * format (without spaces), as described in the ISO 13616-Compliant
@@ -126,42 +143,11 @@
                 /* If the result is a single digit number, pad it with a leading 0 to make a two-digit number. */
                 digitsWithZeros = '00' + digits.toString();
                 digits = digitsWithZeros.substr( -2 );
+
             }
         }
 
         return digits;
-    }
-
-    /*
-     * Auxiliary function. Helps to calculate modulus when working
-     * with big integers.
-     * 
-     * @link http://stackoverflow.com/questions/929910/modulo-in-javascript-large-number
-     */
-    function modulus(divident, divisor) {
-        var cDivident = '';
-        var cRest = '';
-
-        for (var i in divident ) {
-            var cChar = divident[i];
-            var cOperator = cRest + '' + cDivident + '' + cChar;
-
-            if ( cOperator < parseInt(divisor) ) {
-                    cDivident += '' + cChar;
-            } else {
-                    cRest = cOperator % divisor;
-                    if ( cRest == 0 ) {
-                        cRest = '';
-                    }
-                    cDivident = '';
-            }
-
-        }
-        cRest += '' + cDivident;
-        if (cRest == '') {
-            cRest = 0;
-        }
-        return cRest;
     }
 
    /*

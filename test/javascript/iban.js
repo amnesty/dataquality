@@ -1,4 +1,4 @@
-QUnit.test( "testGetIbanCheckDigits", function( assert ) {
+QUnit.test( "testGetIbanCheckDigits", function( assert ) {  
     assert.equal(getIBANCheckDigits( 'GB00WEST12345698765432' ), '82', 'Get check digits of an IBAN' );
     assert.equal(getIBANCheckDigits( '1234567890' ), '', 'If string isn\'t an IBAN, returns empty' );
     assert.equal(getIBANCheckDigits( '' ), '', 'If string is empty, returns empty' );
