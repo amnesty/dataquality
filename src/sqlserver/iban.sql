@@ -100,7 +100,7 @@ BEGIN
     */
 
     DECLARE @alphaNumerical VARCHAR(64)
-    DECLARE @git stwithCountry VARCHAR(64)
+    DECLARE @withCountry VARCHAR(64)
     DECLARE @withoutLetters VARCHAR(64)
     DECLARE @mod97 INT
     DECLARE @digits VARCHAR(2)
