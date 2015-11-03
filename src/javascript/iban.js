@@ -166,9 +166,8 @@
     * @link https://github.com/amnesty/dataquality/wiki/getGlobalIdentifier
     */
     function getGlobalIdentifier( localId, countryCode, suffix ) {
-        var withCountry = "";
-        var without5and7 = "";
         var alphaNumerical = "";
+        var withCountry = "";
         var withoutLetters = "";
         var mod97 = 0;
         var digitsWithZeros = "";
@@ -176,23 +175,17 @@
         var suffixWithZeros = "";
         var globalId = "";
 
-        /* Concatenate localId plus country code and two zeros (00) */
-        withCountry = localId + countryCode + '00';
-
-        /* Exclude positions 5 and 7 */
-        without5and7 =
-            withCountry.substr( 0, 4 ) +
-            withCountry.substr( 5, 1 ) +
-            withCountry.substr( 7 );
-
         /* Removes non alpha-numerical characters */
-        alphaNumerical = replaceCharactersNotInPattern( without5and7,
+        alphaNumerical = replaceCharactersNotInPattern( localId,
             'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', '' );
+
+        /* Concatenate localId plus country code and two zeros (00) */
+        withCountry = alphaNumerical + countryCode + '00';
 
         /* Replace the letters in the string with digits, expanding the string as necessary,
         such that A or a = 10, B or b = 11, and Z or z = 35.
         Each alphabetic character is therefore replaced by 2 digits. */
-        withoutLetters = replaceLetterWithDigits( alphaNumerical );
+        withoutLetters = replaceLetterWithDigits( withCountry );
 
         /* Convert the string to an integer (i.e., ignore leading zeroes) and
         Calculate mod-97 of the new number, which results in the remainder. */

@@ -9,7 +9,7 @@
         }
 
         public function testGetGlobalIdentifier() {
-            $this->assertEquals( 'ES03000G28667152', getGlobalIdentifier( 'G28667152', 'ES', '' ) );
+            $this->assertEquals( 'ES55000G28667152', getGlobalIdentifier( 'G28667152', 'ES', '' ) );
         }
 
         public function testReplaceCharactersNotInPattern() {

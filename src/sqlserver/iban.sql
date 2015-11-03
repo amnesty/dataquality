@@ -99,31 +99,24 @@ BEGIN
                 ES03000G28667152
     */
 
-    DECLARE @withCountry VARCHAR(64)
-    DECLARE @without5and7 VARCHAR(64)
     DECLARE @alphaNumerical VARCHAR(64)
+    DECLARE @git stwithCountry VARCHAR(64)
     DECLARE @withoutLetters VARCHAR(64)
     DECLARE @mod97 INT
     DECLARE @digits VARCHAR(2)
     DECLARE @globalId VARCHAR(64)
 
-    /* Concatenate localId plus country code and two zeros (00) */
-    SET @withCountry = @localId + @countryCode + '00'
-
-    /* Exclude positions 5 and 7 */
-    SET @without5and7 = 
-        SUBSTRING( @withCountry, 1, 4 ) +
-        SUBSTRING( @withCountry, 6, 1 ) +
-        SUBSTRING( @withCountry, 8, LEN( @withCountry ) )
-
     /* Removes non alpha-numerical characters */
-    SET @alphaNumerical = dbo.replaceCharactersNotInPattern( @without5and7,
+    SET @alphaNumerical = dbo.replaceCharactersNotInPattern( @localId,
         'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', '' )
+
+    /* Adds country plus '00' at the end */
+    SET @withCountry = @alphaNumerical + @countryCode + '00'
 
     /* Replace the letters in the string with digits, expanding the string as necessary,
     such that A or a = 10, B or b = 11, and Z or z = 35.
     Each alphabetic character is therefore replaced by 2 digits. */
-    SET @withoutLetters = dbo.replaceLetterWithDigits( @alphaNumerical )
+    SET @withoutLetters = dbo.replaceLetterWithDigits( @withCountry )
 
     /* Convert the string to an integer (i.e., ignore leading zeroes) and
     Calculate mod-97 of the new number, which results in the remainder. */

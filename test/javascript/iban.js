@@ -5,7 +5,7 @@ QUnit.test( "testGetIbanCheckDigits", function( assert ) {
 } );
 
 QUnit.test( "testGetGlobalIdentifier", function( assert ) {
-    assert.equal(getGlobalIdentifier( 'G28667152', 'ES', '' ), 'ES03000G28667152', 'Obtain a global Id' );
+    assert.equal(getGlobalIdentifier( 'G28667152', 'ES', '' ), 'ES55000G28667152', 'Obtain a global Id' );
 } );
 
 QUnit.test( "testReplaceCharactersNotInPattern", function( assert ) {

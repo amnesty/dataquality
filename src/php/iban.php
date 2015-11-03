@@ -138,31 +138,24 @@
      * @link http://stackoverflow.com/questions/929910/modulo-in-javascript-large-number
      */
     function getGlobalIdentifier( $localId, $countryCode, $suffix ) {
-        $withCountry = "";
-        $without5and7 = "";
         $alphaNumerical = "";
+        $withCountry = "";
         $withoutLetters = "";
         $mod97 = 0;
         $digits = "";
         $globalId = "";
 
-        /* Concatenate localId plus country code and two zeros (00) */
-        $withCountry = $localId . $countryCode . '00';
-
-        /* Exclude positions 5 and 7 */
-        $without5and7 =
-            substr( $withCountry, 0, 4 ) .
-            substr( $withCountry, 5, 1 ) .
-            substr( $withCountry, 7 );
-
         /* Removes non alpha-numerical characters */
-        $alphaNumerical = replaceCharactersNotInPattern( $without5and7,
+        $alphaNumerical = replaceCharactersNotInPattern( $localId,
             'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', '' );
+
+        /* Concatenate localId plus country code and two zeros (00) */
+        $withCountry = $alphaNumerical . $countryCode . '00';
 
         /* Replace the letters in the string with digits, expanding the string as necessary,
         such that A or a = 10, B or b = 11, and Z or z = 35.
         Each alphabetic character is therefore replaced by 2 digits. */
-        $withoutLetters = replaceLetterWithDigits( $alphaNumerical );
+        $withoutLetters = replaceLetterWithDigits( $withCountry );
 
         /* Convert the string to an integer (i.e., ignore leading zeroes) and
         Calculate mod-97 of the new number, which results in the remainder. */

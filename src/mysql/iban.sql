@@ -203,31 +203,24 @@ BEGIN
     * @link https://github.com/amnesty/dataquality/wiki/getGlobalIdentifier
     */
 
-    DECLARE withCountry VARCHAR(64);
-    DECLARE without5and7 VARCHAR(64);
     DECLARE alphaNumerical VARCHAR(64);
+    DECLARE withCountry VARCHAR(64);
     DECLARE withoutLetters VARCHAR(64);
     DECLARE mod97 INT;
     DECLARE digits VARCHAR(2);
     DECLARE globalId VARCHAR(64);
 
-    /* Concatenate localId plus country code and two zeros (00) */
-    SET withCountry = CONCAT( localId, countryCode, '00' );
-
-    /* Exclude positions 5 and 7 */
-    SET without5and7 = CONCAT(
-        SUBSTRING( withCountry, 1, 4 ),
-        SUBSTRING( withCountry, 6, 1 ),
-        SUBSTRING( withCountry, 8 ) );
-
     /* Removes non alpha-numerical characters */
-    SET alphaNumerical = replaceCharactersNotInPattern( without5and7,
+    SET alphaNumerical = replaceCharactersNotInPattern( localId,
         'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', '' );
+
+    /* Concatenate localId plus country code and two zeros (00) */
+    SET withCountry = CONCAT( alphaNumerical, countryCode, '00' );
 
     /* Replace the letters in the string with digits, expanding the string as necessary,
     such that A or a = 10, B or b = 11, and Z or z = 35.
     Each alphabetic character is therefore replaced by 2 digits. */
-    SET withoutLetters = replaceLetterWithDigits( alphaNumerical );
+    SET withoutLetters = replaceLetterWithDigits( withCountry );
 
     /* Convert the string to an integer (i.e., ignore leading zeroes) and
     Calculate mod-97 of the new number, which results in the remainder. */
