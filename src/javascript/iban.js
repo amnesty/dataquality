@@ -6,8 +6,8 @@
     */
     function isValidIBAN( accNumber ) {
         var isValid = false;
-        var countryCode = accNumber.substr( 0, 2 );
-        var writenDigits = accNumber.substr( 2, 2 );
+        var countryCode = accNumber.substr( 0, 2 ); //IT
+        var writenDigits = accNumber.substr( 2, 2 ); // 44
 
         if ( isSepaCountry( countryCode ) ) {
             if ( accNumber.length == getAccountLength( countryCode ) ) {
@@ -38,7 +38,6 @@
         if ( getAccountLength( countryCode ) != 0 ) {
             isSepa = true;
         }
-
         return isSepa;
     }
 
@@ -96,7 +95,6 @@
         var part = divident.substring(0, partLength);
         divident = (part % divisor) +  divident.substring(partLength);          
       }
-
       return divident % divisor;
     }
 
@@ -125,7 +123,8 @@
             if( accNumber.length == accountLength ) {
                 /* Replace the two check digits by 00 (e.g., GB00 for the UK) and
                     Move the four initial characters to the end of the string. */
-                accRearranged =
+
+                    accRearranged =
                     accNumber.substr( 4 - accNumber.length ) + accNumber.substr( 0, 2 ) + '00';
 
                 /* Replace the letters in the string with digits, expanding the string as necessary,
@@ -146,7 +145,6 @@
 
             }
         }
-
         return digits;
     }
 
@@ -237,25 +235,40 @@
 
    /*
     * replaceLetterWithDigits changes letters in a given string with its
-    * correspondent numbers, as described in ECBS EBS204 V3.2 [August 2003]
-    * document: A=1, B=2, ..., Y=34, Z=35.
+    * correspondent numbers: A=10, B=11, ..., Y=34, Z=35.
     * 
     * @link https://github.com/amnesty/dataquality/wiki/replaceLetterWithDigits
     */
     function replaceLetterWithDigits( accNumber ) {
-        var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        var findLetter = "";
-        var replaceWith = 0;
-        var i = 0;
 
-        while( i <= letters.length ) {
-            findLetter = letters.substr( i-1, 1 );
-            replaceWith = letters.indexOf( findLetter ) + 10;
-            accNumber = accNumber.replace( findLetter, replaceWith );
-
-            i++;
+      regExAllLetters = /[A-Z]/g;
+      
+      var AllLetters = accNumber.match(regExAllLetters);
+      var AllLettersNoDuplicates = [...new Set(AllLetters)]
+  
+      const letterToDigits = {
+        'A': '10', 
+        'B': '11', 'C': '12', 'D': '13', 'E': '14', 'F': '15',
+        'G': '16', 'H': '17', 'I': '18', 'J': '19', 'K': '20',
+        'L': '21', 'M': '22', 'N': '23', 'O': '24', 'P': '25',
+        'Q': '26', 'R': '27', 'S': '28', 'T': '29', 'U': '30', 
+        'V': '30', 'W': '31', 'X': '32', 'Y': '33', 'Z': '35'
         }
+      
 
-        return accNumber;
+      var positionLetter = []
+
+      for (let i = 0; i < AllLettersNoDuplicates.length; i++) {
+        for (let j = 0; j < accNumber.length; j ++) {
+            if (AllLettersNoDuplicates[i] == accNumber[j]){
+            positionLetter.push({"position": j, "letter": accNumber[j]})
+          }
+        }
+      }
+        
+      arrayAccNumber = [...accNumber];  
+      positionLetter.forEach(item => arrayAccNumber.splice(item.position, 1, letterToDigits[item.letter]) )
+      accNumber = arrayAccNumber.join(""); 
+      
+      return accNumber;
     }
-
