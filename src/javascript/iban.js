@@ -243,7 +243,7 @@
 
       regExAllLetters = /[A-Z]/g;
       
-      var AllLetters = accNumber.match(regExAllLetters);
+      var AllLetters = accNumber.matchAll(regExAllLetters);
       var AllLettersNoDuplicates = [...new Set(AllLetters)]
   
       const letterToDigits = {
@@ -258,17 +258,20 @@
 
       var positionLetter = []
 
-      for (let i = 0; i < AllLettersNoDuplicates.length; i++) {
-        for (let j = 0; j < accNumber.length; j ++) {
-            if (AllLettersNoDuplicates[i] == accNumber[j]){
-            positionLetter.push({"position": j, "letter": accNumber[j]})
-          }
-        }
-      }
-        
+      AllLettersNoDuplicates.forEach(match => positionLetter.push({"position": match.index, "letter": match[0] }))
+
       arrayAccNumber = [...accNumber];  
       positionLetter.forEach(item => arrayAccNumber.splice(item.position, 1, letterToDigits[item.letter]) )
       accNumber = arrayAccNumber.join(""); 
       
       return accNumber;
     }
+
+    var validIbanDE         = 'DE29100100100987654321'
+    var notValidIbanDE        = 'DE28100100100987654321'
+  
+    console.log("ibanDE: ",  validIbanDE);
+    console.log("ibanDE: ",  isValidIBAN(validIbanDE));
+    console.log("ibanDE: ",  notValidIbanDE);
+    console.log("ibanDE: ",  isValidIBAN(notValidIbanDE));
+    
